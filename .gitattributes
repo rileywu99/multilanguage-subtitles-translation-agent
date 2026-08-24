@@ -1,0 +1,12 @@
+# Normalize all text files to LF on checkin, keep LF on checkout regardless
+# of the contributor's OS (avoids CRLF/LF diff noise across Mac/Windows/Linux).
+* text=auto eol=lf
+
+# Binary assets should never go through line-ending normalization.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
