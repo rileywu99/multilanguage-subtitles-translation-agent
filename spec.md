@@ -1,7 +1,7 @@
 # Translation Agent — Technical Spec
 
 > 本文件根據現有 code 反推(`src/lib/*.ts`、`src/app/api/translate/route.ts`),記錄實際運作方式,而非行銷簡報上的概念版流程。
-> 線上體驗: https://translation-agent-rho.vercel.app
+> 線上體驗: https://rileywu99.github.io/multilanguage-subtitles-translation-agent/（靜態 demo，播放範例結果；本機設定 ANTHROPIC_API_KEY 可跑完整流程）
 
 ## 1. 定位
 

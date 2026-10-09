@@ -2,7 +2,7 @@
 
 CSV translation agent built for the CTW Inc. AI Product Manager technical assessment. Upload a CSV, it figures out on its own which columns need translating, and returns a translated copy — no manual column mapping, no per-file prompt engineering.
 
-**Live demo:** https://translation-agent-rho.vercel.app
+**Live demo:** https://rileywu99.github.io/multilanguage-subtitles-translation-agent/ (static demo that replays a sample run; run locally with `ANTHROPIC_API_KEY` for the full pipeline)
 
 ## What it does
 
