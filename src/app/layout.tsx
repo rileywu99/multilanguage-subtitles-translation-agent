@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Multilingual Translation Agent",
+  title: "CSV Localizer",
   description: "Chat-based agent that translates Chinese CSV columns into any target language",
 };
 

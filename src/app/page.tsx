@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { detectSourceLanguage, detectTranslatableColumns, parseCsv, type CsvTable } from "@/lib/csv";
+import { detectSourceLanguage, detectTranslatableColumns, parseCsv, toCsv, type CsvTable } from "@/lib/csv";
 import { COMMON_LANGUAGES } from "@/lib/languages";
+import { DEMO, DEMO_STAGES, PREPARED, SAMPLE_CSV, SAMPLE_FILE_NAME } from "@/lib/demo";
 
 type Result = { summary: string; csv: string; fileName: string; flaggedCount: number };
 
@@ -19,6 +20,8 @@ const SAME_LANGUAGE_TARGET_CODE: Record<string, string> = {
   English: "en",
   Japanese: "ja",
 };
+
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 function downloadCsv(csv: string, fileName: string) {
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -41,6 +44,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
+  const [stage, setStage] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isSupportedSource = detectedLanguage !== null && SUPPORTED_SOURCE_LANGUAGES.has(detectedLanguage);
@@ -64,11 +68,61 @@ export default function Home() {
     if (language && SAME_LANGUAGE_TARGET_CODE[language] === selectedCode) setSelectedCode("");
   }
 
+  function loadSample() {
+    handleFile(new File([SAMPLE_CSV], SAMPLE_FILE_NAME, { type: "text/csv" }));
+  }
+
+  // Static demo: replay the prepared output for the sample file, walking
+  // through the same four stages the real pipeline runs.
+  async function runDemo() {
+    if (!table || !selectedLanguage || !fileName) return;
+    if (csvText !== SAMPLE_CSV) {
+      setError(
+        "This hosted demo replays one sample file. Load the sample CSV to see a full run — to localize your own files, run the app locally with an Anthropic API key (instructions on GitHub).",
+      );
+      return;
+    }
+    const prepared = PREPARED[selectedLanguage.code];
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    for (let i = 0; i < DEMO_STAGES.length; i++) {
+      setStage(i);
+      await wait(900);
+    }
+    setStage(null);
+    const columnIndex = { product_name: 0, description: 1, category: 2 } as Record<string, number>;
+    const out: CsvTable = {
+      headers: [...table.headers, ...prepared.headers],
+      rows: table.rows.map((row, ri) => {
+        const next = { ...row };
+        table.headers.forEach((h, ci) => {
+          const idx = columnIndex[h];
+          next[prepared.headers[ci]] = idx === undefined ? (row[h] ?? "") : prepared.rows[ri][idx];
+        });
+        return next;
+      }),
+    };
+    const summary =
+      `Detected ${detectedColumns.length} ${detectedLanguage} columns (${detectedColumns.join(", ")}) across ${table.rows.length} rows ` +
+      `(domain: ${prepared.context.domain}, tone: ${prepared.context.tone}), and translated into ${selectedLanguage.name}. ` +
+      `Output has ${out.headers.length} columns.`;
+    const baseName = fileName.replace(/\.csv$/i, "");
+    setResult({
+      summary,
+      csv: toCsv(out),
+      fileName: `${baseName}__${detectedLanguage}_to_${selectedLanguage.name}.csv`,
+      flaggedCount: 0,
+    });
+    setLoading(false);
+  }
+
   const canSubmit =
     Boolean(csvText) && isSupportedSource && detectedColumns.length > 0 && selectedLanguage !== null && !loading;
 
   async function handleSubmit() {
     if (!csvText || !fileName || !selectedLanguage) return;
+    if (DEMO) return runDemo();
     setLoading(true);
     setError(null);
     setResult(null);
@@ -96,8 +150,21 @@ export default function Home() {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col px-4 py-10">
       <header className="mb-6">
-        <h1 className="text-lg font-semibold">Multilingual Translation Agent</h1>
-        <p className="text-sm text-gray-500">Upload a CSV, pick a target language, get a translated CSV back. Supports English, Chinese (Traditional/Simplified), and Japanese source content.</p>
+        <h1 className="text-lg font-semibold">CSV Localizer</h1>
+        <p className="text-sm text-gray-500">Upload a CSV, pick a target language, get a localized CSV back. Supports English, Chinese (Traditional/Simplified), and Japanese source content.</p>
+        {DEMO && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <span>
+              Demo mode — no live API here. Load the sample product catalog, pick a language, and watch a full run.
+            </span>
+            <button
+              onClick={loadSample}
+              className="rounded bg-gray-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-700"
+            >
+              Load sample CSV
+            </button>
+          </div>
+        )}
       </header>
 
       <div className="space-y-5 rounded-lg border border-gray-200 bg-white p-6">
@@ -154,7 +221,7 @@ export default function Home() {
             </div>
           ) : !isSupportedSource ? (
             <div className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-              Detected language: <span className="font-medium">{detectedLanguage}</span>. This language isn't
+              Detected language: <span className="font-medium">{detectedLanguage}</span>. This language isn&apos;t
               supported yet — supported source languages are English, Chinese, and Japanese.
             </div>
           ) : detectedColumns.length > 0 ? (
@@ -192,8 +259,18 @@ export default function Home() {
           disabled={!canSubmit}
           className="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
         >
-          {loading ? "Translating…" : "Translate"}
+          {loading ? (stage !== null ? `${DEMO_STAGES[stage]}…` : "Translating…") : "Translate"}
         </button>
+
+        {DEMO && loading && stage !== null && (
+          <ol className="space-y-1 text-sm">
+            {DEMO_STAGES.map((label, i) => (
+              <li key={label} className={i < stage ? "text-gray-400" : i === stage ? "font-medium text-gray-900" : "text-gray-300"}>
+                {i < stage ? "✓" : i === stage ? "●" : "○"} {i + 1}. {label}
+              </li>
+            ))}
+          </ol>
+        )}
 
         {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
 
@@ -213,7 +290,43 @@ export default function Home() {
             </button>
           </div>
         )}
+
+        {result && <ResultPreview csv={result.csv} sourceColumns={table?.headers.length ?? 0} />}
       </div>
+    </div>
+  );
+}
+
+// The translated half of the output, so the result is visible without
+// downloading the file.
+function ResultPreview({ csv, sourceColumns }: { csv: string; sourceColumns: number }) {
+  const out = parseCsv(csv);
+  const headers = out.headers.slice(sourceColumns);
+  if (headers.length === 0) return null;
+  return (
+    <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <table className="w-full text-left text-xs">
+        <thead className="bg-gray-50 text-gray-500">
+          <tr>
+            {headers.map((h) => (
+              <th key={h} className="px-3 py-2 font-medium whitespace-nowrap">
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {out.rows.slice(0, 6).map((row, i) => (
+            <tr key={i} className="border-t border-gray-100">
+              {headers.map((h) => (
+                <td key={h} className="px-3 py-2 align-top text-gray-700">
+                  {row[h]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
