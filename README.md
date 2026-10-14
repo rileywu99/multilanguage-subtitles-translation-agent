@@ -1,6 +1,6 @@
 # Multilingual Translation Agent
 
-CSV translation agent built for the CTW Inc. AI Product Manager technical assessment. Upload a CSV, it figures out on its own which columns need translating, and returns a translated copy — no manual column mapping, no per-file prompt engineering.
+CSV translation agent for subtitle scripts and other multilingual spreadsheets. Upload a CSV, it figures out on its own which columns need translating, and returns a translated copy — no manual column mapping, no per-file prompt engineering.
 
 **Live demo:** https://rileywu99.github.io/multilanguage-subtitles-translation-agent/ (static demo that replays a sample run; run locally with `ANTHROPIC_API_KEY` for the full pipeline)
 
