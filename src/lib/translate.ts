@@ -128,6 +128,10 @@ async function translateHeaders(
     ? ` The file's content domain is "${context.domain}" — use that to disambiguate words with multiple meanings ` +
       '(e.g. in a film/script context, "character" means a role/person, not a text glyph).'
     : "";
+  // Headers need the same locale rules as cell values; without them a zh-TW
+  // file came back with Mainland headers (文本, 最大字符數) over Taiwan cells.
+  const localeNote = LOCALE_REGISTER_NOTES[language.code];
+  const localeLine = localeNote ? ` ${localeNote}` : "";
 
   try {
     const response = await client.messages.create({
@@ -135,7 +139,7 @@ async function translateHeaders(
       max_tokens: 1024,
       system:
         `Translate the "text" value of each entry into a short, natural CSV column-header label in ` +
-        `${language.name} (${language.code}).${contextLine} Generic identifiers that shouldn't be translated ` +
+        `${language.name} (${language.code}).${contextLine}${localeLine} Generic identifiers that shouldn't be translated ` +
         '(e.g. "id", "SKU", "URL") may be kept as-is. Keep _id unchanged, preserve order, do not add or drop ' +
         'entries. Reply with ONLY the resulting JSON array of {"_id":...,"text":...} objects, no prose, no markdown fences.',
       messages: [{ role: "user", content: JSON.stringify(payload) }],
