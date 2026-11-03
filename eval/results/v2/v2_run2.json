@@ -1,0 +1,1931 @@
+{
+  "summary": {
+    "label": "v2_run2",
+    "run_at": "2026-11-03T04:33:27.547Z",
+    "harness": "v2",
+    "translation_model": "claude-sonnet-5",
+    "utility_model": "claude-haiku-4-5-20251001",
+    "judge_model": "claude-opus-5-5",
+    "rows": 40,
+    "shape": {
+      "input_rows": 40,
+      "output_rows": 40,
+      "rows_match": true,
+      "columns_match": true,
+      "passthrough_intact": true,
+      "detected_columns": [
+        "text"
+      ],
+      "flagged_count": 0,
+      "headers_out": [
+        "鍵值",
+        "類型",
+        "文字",
+        "最大字元數"
+      ]
+    },
+    "context": {
+      "domain": "technical documentation / SaaS product interface",
+      "tone": "formal, instructional",
+      "notes": "Contains placeholder variables (%1$s, %2$s) that should not be translated; brand names (Stripe, Google Sheets) should remain unchanged."
+    },
+    "glossary": {
+      "Will Chen": "陳威廉",
+      "Grace Lin": "林格蕾絲",
+      "Michael Johnson": "麥可·強森"
+    },
+    "file": {
+      "length_ratio_fence": [
+        0.067,
+        0.858
+      ],
+      "register": {
+        "您": 16,
+        "你": 0,
+        "both": 0
+      },
+      "register_major": "您",
+      "spacing": {
+        "spaced": 67,
+        "tight": 1
+      },
+      "names": {
+        "Will Chen": [
+          "glossary:陳威廉",
+          "glossary:陳威廉"
+        ],
+        "Grace Lin": [
+          "glossary:林格蕾絲",
+          "glossary:林格蕾絲"
+        ],
+        "Zhang Wei": [
+          "changed"
+        ],
+        "Liu Yang": [
+          "changed"
+        ],
+        "Michael Johnson": [
+          "glossary:麥可·強森",
+          "glossary:麥可·強森"
+        ]
+      },
+      "terms": {
+        "Notion": [
+          "kept"
+        ],
+        "Stripe": [
+          "kept"
+        ],
+        "Lexingtonight": [
+          "kept"
+        ],
+        "Slack": [
+          "kept"
+        ],
+        "n8n": [
+          "kept"
+        ],
+        "iPhone": [
+          "kept"
+        ],
+        "CSV": [
+          "kept",
+          "kept"
+        ],
+        "PRD": [
+          "kept",
+          "kept"
+        ],
+        "API": [
+          "kept",
+          "kept"
+        ],
+        "SKU": [
+          "kept",
+          "kept"
+        ],
+        "Google Sheets": [
+          "MISUSE:kept-English"
+        ],
+        "Smart Import": [
+          "MISUSE",
+          "MISUSE"
+        ],
+        "Workspace Pro": [
+          "kept"
+        ],
+        "Los Angeles": [
+          "洛杉磯"
+        ],
+        "San Francisco": [
+          "舊金山"
+        ],
+        "Taipei": [
+          "台北"
+        ],
+        "Google Calendar": [
+          "MISUSE:kept-English"
+        ],
+        "Shopify": [
+          "kept"
+        ],
+        "Apple Pay": [
+          "kept"
+        ],
+        "PayPal": [
+          "kept"
+        ],
+        "account": [
+          "帳戶",
+          "帳號"
+        ],
+        "settings": [
+          "設定",
+          "設定",
+          "設定"
+        ],
+        "message": [
+          "訊息"
+        ],
+        "plan": [
+          "方案",
+          "方案"
+        ],
+        "team": [
+          "團隊",
+          "團隊"
+        ],
+        "file": [
+          "檔案",
+          "檔案"
+        ],
+        "email": [
+          "電子郵件"
+        ],
+        "roadmap": [
+          "路線圖",
+          "路線圖"
+        ]
+      },
+      "inconsistent_names": [],
+      "inconsistent_terms": [
+        {
+          "term": "account",
+          "renderings": [
+            "帳戶",
+            "帳號"
+          ]
+        }
+      ]
+    },
+    "time_total_s": 35.47,
+    "time_per_row_ms": 887,
+    "tokens": {
+      "input": 9069,
+      "output": 5006
+    },
+    "cost_pipeline_usd": 0.06702,
+    "cost_per_100_rows_usd": 0.1676,
+    "cost_judge_usd": 0.23028,
+    "usage_by_stage": [
+      {
+        "stage": "context",
+        "model": "claude-haiku-4-5-20251001",
+        "input": 259,
+        "output": 69,
+        "ms": 1358
+      },
+      {
+        "stage": "headers",
+        "model": "claude-haiku-4-5-20251001",
+        "input": 275,
+        "output": 59,
+        "ms": 973
+      },
+      {
+        "stage": "glossary",
+        "model": "claude-sonnet-5",
+        "input": 1383,
+        "output": 1732,
+        "ms": 20824
+      },
+      {
+        "stage": "translate",
+        "model": "claude-sonnet-5",
+        "input": 1584,
+        "output": 348,
+        "ms": 3706
+      },
+      {
+        "stage": "translate",
+        "model": "claude-sonnet-5",
+        "input": 1821,
+        "output": 451,
+        "ms": 5098
+      },
+      {
+        "stage": "translate",
+        "model": "claude-sonnet-5",
+        "input": 1911,
+        "output": 980,
+        "ms": 10894
+      },
+      {
+        "stage": "translate",
+        "model": "claude-sonnet-5",
+        "input": 1836,
+        "output": 1367,
+        "ms": 13284
+      }
+    ]
+  },
+  "rows": [
+    {
+      "key": "btn.save",
+      "source": "Save changes",
+      "output": "儲存變更",
+      "max_chars": 20,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.333,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "「儲存變更」 accurately and naturally renders 'Save changes' using standard Taiwan UI terms with no additions."
+      }
+    },
+    {
+      "key": "btn.cancel",
+      "source": "Cancel",
+      "output": "取消",
+      "max_chars": 12,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": null,
+        "register": null,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": null,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "「取消」 is the standard, accurate Taiwan UI term for Cancel, with nothing added."
+      }
+    },
+    {
+      "key": "nav.settings",
+      "source": "Account settings",
+      "output": "帳戶設定",
+      "max_chars": 24,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {
+        "account": "帳戶",
+        "settings": "設定"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.25,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "「帳戶設定」 is an accurate, natural, and concise Taiwan rendering of \"Account settings\"."
+      }
+    },
+    {
+      "key": "toast.welcome",
+      "source": "Welcome back, {name}!",
+      "output": "歡迎回來，{name}！",
+      "max_chars": 40,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.4,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan phrasing with the placeholder preserved and nothing added."
+      }
+    },
+    {
+      "key": "toast.messages",
+      "source": "You have %d new messages",
+      "output": "您有 %d 則新訊息",
+      "max_chars": 40,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {
+        "message": "訊息"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": true,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.364,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The translation keeps the full meaning and the %d placeholder, and it uses the natural Taiwan measure word 則 with no added words."
+      }
+    },
+    {
+      "key": "toast.upload",
+      "source": "%s was uploaded successfully.",
+      "output": "%s 已成功上傳。",
+      "max_chars": 60,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": true,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.259,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural and concise; the placeholder is preserved."
+      }
+    },
+    {
+      "key": "cart.count",
+      "source": "{{count}} items in your cart",
+      "output": "您的購物車中有 {{count}} 件商品",
+      "max_chars": 40,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.632,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan phrasing. Placeholder preserved, and 有 is a normal grammatical addition."
+      }
+    },
+    {
+      "key": "legal.signup",
+      "source": "By signing up, you agree to our <a href=\"/terms\">Terms of Service</a> and <a href=\"/privacy\">Privacy Policy</a>.",
+      "output": "註冊即表示您同意我們的<a href=\"/terms\">服務條款</a>與<a href=\"/privacy\">隱私權政策</a>。",
+      "max_chars": 200,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.324,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan phrasing with tags preserved and no padding."
+      }
+    },
+    {
+      "key": "banner.offer",
+      "source": "<strong>Limited offer:</strong> save 20% on annual plans until <em>Dec 31</em>.",
+      "output": "<strong>限時優惠：</strong>於<em>12 月 31 日</em>前訂閱年繳方案可享 8 折優惠。",
+      "max_chars": 120,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {
+        "plan": "方案"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": false,
+        "dates": true,
+        "times": null,
+        "currency": null,
+        "units": false,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": false,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.585,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Meaning, tags and date are kept; 8 折 is the correct Taiwan rendering of 20% off, and the added 訂閱 is a natural, implied verb rather than padding."
+      }
+    },
+    {
+      "key": "pricing.pro",
+      "source": "Pro plan: $19.99/month, billed annually at $199.",
+      "output": "專業方案：每月 $19.99 美元，年繳總計 $199 美元。",
+      "max_chars": 80,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {
+        "plan": "方案"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": false,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.646,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "fail",
+        "concise": "fail",
+        "reason": "The meaning is kept, but pairing「$」with「美元」is a redundant, unnatural double currency marker, and「總計」plus the extra「美元」add words the source does not have."
+      }
+    },
+    {
+      "key": "pricing.storage",
+      "source": "Includes 50 GB of storage and up to 5 team members.",
+      "output": "包含 50 GB 儲存空間，最多可容納 5 位團隊成員。",
+      "max_chars": 80,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {
+        "team": "團隊"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": true,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.549,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The full meaning is kept in natural Taiwan Mandarin; 「可容納」 is just a natural verb for the second clause, not padding."
+      }
+    },
+    {
+      "key": "notice.maintenance",
+      "source": "Scheduled maintenance on March 3, 2026 from 9:30 PM to 11:00 PM PT.",
+      "output": "系統將於 2026 年 3 月 3 日太平洋時間晚上 9:30 至 11:00 進行預定維護。",
+      "max_chars": 120,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": true,
+        "times": true,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.701,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The meaning and time are correct and the phrasing is natural, but 「系統將於」 adds words that are not in the source fragment."
+      }
+    },
+    {
+      "key": "help.temperature",
+      "source": "Keep the device between 0°C and 35°C (32°F to 95°F).",
+      "output": "請將裝置保存在攝氏 0°C 至 35°C（華氏 32°F 至 95°F）之間。",
+      "max_chars": 80,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": false,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.75,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "fail",
+        "concise": "fail",
+        "reason": "Meaning is kept, but 「攝氏…°C」 and 「華氏…°F」 state the unit twice, which reads awkwardly, and the added 「請」, 「攝氏」 and 「華氏」 are padding not in the source."
+      }
+    },
+    {
+      "key": "integration.notion",
+      "source": "Connect your Notion workspace to sync pages automatically.",
+      "output": "連結您的 Notion 工作區，即可自動同步頁面。",
+      "max_chars": 100,
+      "name_renderings": {},
+      "term_renderings": {
+        "Notion": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.431,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan phrasing; 「即可」 is a natural connective that adds nothing substantive."
+      }
+    },
+    {
+      "key": "integration.stripe",
+      "source": "Payments are processed securely by Stripe. We never store your card number.",
+      "output": "付款由 Stripe 安全處理，我們不會儲存您的卡號。",
+      "max_chars": 120,
+      "name_renderings": {},
+      "term_renderings": {
+        "Stripe": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.36,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Meaning is fully kept with natural Taiwan wording; 「不會」 slightly softens 'never' (「絕不會」 would be stronger) but is acceptable."
+      }
+    },
+    {
+      "key": "marketing.lexingtonight",
+      "source": "Follow Lexingtonight for daily life tips and diary posts.",
+      "output": "追蹤 Lexingtonight，掌握每日生活小技巧與日記分享。",
+      "max_chars": 100,
+      "name_renderings": {},
+      "term_renderings": {
+        "Lexingtonight": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.561,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The translation keeps the full meaning, leaves the brand name as-is, reads naturally in Taiwan Mandarin, and 「掌握」 is a natural rendering of 'for', not padding."
+      }
+    },
+    {
+      "key": "integration.slack",
+      "source": "Send a Slack alert when a Workflow fails in n8n.",
+      "output": "當 n8n 中的 Workflow 執行失敗時，發送 Slack 通知。",
+      "max_chars": 100,
+      "name_renderings": {},
+      "term_renderings": {
+        "Slack": "kept",
+        "n8n": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.75,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The meaning is fully kept and reads naturally; leaving 'Workflow' in English as an n8n product term is acceptable, and 「執行」 is a normal grammatical addition."
+      }
+    },
+    {
+      "key": "help.iphone",
+      "source": "Open the app on your iPhone and tap Share, then Add to Home Screen.",
+      "output": "在您的 iPhone 上開啟應用程式，點選「分享」，再選擇「加入主畫面」。",
+      "max_chars": 120,
+      "name_renderings": {},
+      "term_renderings": {
+        "iPhone": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.552,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The translation keeps the full meaning, uses Taiwan iOS terms (分享, 加入主畫面) and adds no padding."
+      }
+    },
+    {
+      "key": "onboarding.intro",
+      "source": "Start by importing a CSV file. We will detect which columns need translation, keep IDs and prices untouched, and return a localized copy you can download in under a minute.",
+      "output": "請先匯入 CSV 檔案，我們會自動偵測需要翻譯的欄位，保留 ID 與價格不變，並在一分鐘內提供可供下載的在地化版本。",
+      "max_chars": 300,
+      "name_renderings": {},
+      "term_renderings": {
+        "CSV": "kept"
+      },
+      "recurring_renderings": {
+        "file": "檔案"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.337,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The meaning is intact and the phrasing is natural, but the translation adds 「請」 and 「自動」, which are not in the source."
+      }
+    },
+    {
+      "key": "legal.privacy",
+      "source": "We only use your data to provide the service. You can export or delete your account at any time from Settings > Privacy.",
+      "output": "我們僅會將您的資料用於提供服務。您可以隨時至「設定」>「隱私權」匯出或刪除您的帳號。",
+      "max_chars": 200,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {
+        "account": "帳號",
+        "settings": "設定"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": false
+      },
+      "length_ratio": 0.35,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The translation is faithful and natural Taiwan Mandarin, uses standard terms (隱私權, 帳號), and adds no padding."
+      }
+    },
+    {
+      "key": "email.shipped",
+      "source": "Hi {first_name}, your order #{order_id} has shipped and should arrive by {date}.",
+      "output": "您好 {first_name}，您的訂單 #{order_id} 已出貨，預計於 {date} 送達。",
+      "max_chars": 160,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.442,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The full meaning is kept, placeholders are preserved, and 「已出貨」 and 「預計於…送達」 are natural Taiwan phrasing; 您好 is a normal rendering of Hi."
+      }
+    },
+    {
+      "key": "email.welcome",
+      "source": "Thanks for joining!\nReply to this email if you have any questions.",
+      "output": "感謝您的加入！\n如有任何問題，歡迎直接回覆此電子郵件。",
+      "max_chars": 160,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {
+        "email": "電子郵件"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.409,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The meaning and wording read naturally, but 「歡迎直接」 adds a softener and an adverb that the plain imperative \"Reply\" does not have."
+      }
+    },
+    {
+      "key": "error.upload",
+      "source": "Upload failed at 75%. Please check your connection and try again.",
+      "output": "上傳於 75% 時失敗，請檢查您的網路連線後再試一次。",
+      "max_chars": 120,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": true,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.415,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan Mandarin. 「請」 mirrors the source's \"Please\", and 「網路」 is a natural rendering of \"connection\" in context."
+      }
+    },
+    {
+      "key": "tooltip.password",
+      "source": "Password must be at least 8 characters.<br>Use letters and numbers.",
+      "output": "密碼長度至少需 8 個字元。<br>請使用英文字母與數字組合。",
+      "max_chars": 120,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.429,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The meaning and <br> tag are kept and the wording is natural, but the translation adds 「請」 and 「組合」, which are not in the source."
+      }
+    },
+    {
+      "key": "toast.invite",
+      "source": "%1$s invited you to join %2$s.",
+      "output": "%1$s 邀請您加入 %2$s。",
+      "max_chars": 80,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": true,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.364,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan Mandarin with placeholders preserved and no added words."
+      }
+    },
+    {
+      "key": "error.404",
+      "source": "Error 404: Page not found",
+      "output": "錯誤 404：找不到頁面",
+      "max_chars": 60,
+      "name_renderings": {},
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": null
+      },
+      "length_ratio": 0.48,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan phrasing that keeps the error code and adds nothing."
+      }
+    },
+    {
+      "key": "name.review",
+      "source": "Will Chen will review your PRD tomorrow.",
+      "output": "陳威廉將於明天審核您的 PRD。",
+      "max_chars": 60,
+      "name_renderings": {
+        "Will Chen": "glossary:陳威廉"
+      },
+      "term_renderings": {
+        "PRD": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": true,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": true,
+        "term_consistency": true
+      },
+      "length_ratio": 0.4,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "「Will Chen」is correctly treated as a person's name, the future meaning is kept with 「將於明天」, and the wording is natural with no padding."
+      }
+    },
+    {
+      "key": "name.share",
+      "source": "Grace Lin shared the Q3 Roadmap with you.",
+      "output": "林格蕾絲與您分享了第三季路線圖。",
+      "max_chars": 60,
+      "name_renderings": {
+        "Grace Lin": "glossary:林格蕾絲"
+      },
+      "term_renderings": {},
+      "recurring_renderings": {
+        "roadmap": "路線圖"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": false,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": true,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": null,
+        "name_consistency": true,
+        "term_consistency": true
+      },
+      "length_ratio": 0.39,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "fail",
+        "concise": "pass",
+        "reason": "The meaning is intact, but rendering the person name 'Grace Lin' as the hybrid 「林格蕾絲」 reads unnaturally; it should stay as 'Grace Lin'."
+      }
+    },
+    {
+      "key": "name.welcome",
+      "source": "Thanks, Zhang Wei! Your API key is ready.",
+      "output": "謝謝您，張偉！您的 API 金鑰已經準備好了。",
+      "max_chars": 60,
+      "name_renderings": {
+        "Zhang Wei": "changed"
+      },
+      "term_renderings": {
+        "API": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": false,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": true,
+        "term_consistency": true
+      },
+      "length_ratio": 0.561,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Meaning, name and API term are kept, and the polite 您 and 已經…了 are natural zh-TW phrasing, not padding."
+      }
+    },
+    {
+      "key": "name.comment",
+      "source": "Liu Yang commented on SKU-1043: please check the stock count.",
+      "output": "劉洋在 SKU-1043 留言：請確認庫存數量。",
+      "max_chars": 80,
+      "name_renderings": {
+        "Liu Yang": "changed"
+      },
+      "term_renderings": {
+        "SKU": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": false,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": true,
+        "term_consistency": true
+      },
+      "length_ratio": 0.393,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The name, SKU and request are all kept, and the phrasing is natural Taiwan usage with nothing added."
+      }
+    },
+    {
+      "key": "name.assign",
+      "source": "Assigned to Grace Lin and Will Chen by Michael Johnson.",
+      "output": "由麥可·強森指派給林格蕾絲與陳威廉。",
+      "max_chars": 80,
+      "name_renderings": {
+        "Will Chen": "glossary:陳威廉",
+        "Grace Lin": "glossary:林格蕾絲",
+        "Michael Johnson": "glossary:麥可·強森"
+      },
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": true,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": null,
+        "name_consistency": true,
+        "term_consistency": null
+      },
+      "length_ratio": 0.327,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Grace, Will and Michael are correctly treated as person names, and the sentence is complete, natural and adds nothing."
+      }
+    },
+    {
+      "key": "name.grace",
+      "source": "Michael Johnson asked for a grace period on the invoice.",
+      "output": "麥可·強森要求延長發票的寬限期。",
+      "max_chars": 60,
+      "name_renderings": {
+        "Michael Johnson": "glossary:麥可·強森"
+      },
+      "term_renderings": {},
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": true,
+        "terms": null,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": null,
+        "name_consistency": true,
+        "term_consistency": null
+      },
+      "length_ratio": 0.286,
+      "judge": {
+        "accuracy": "fail",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The source asks for a grace period, but 「延長」 implies extending an existing one, adding meaning not in the source."
+      }
+    },
+    {
+      "key": "term.sheets",
+      "source": "Export your Roadmap to Google Sheets or download it as a CSV file.",
+      "output": "將您的路線圖匯出至 Google Sheets，或下載為 CSV 檔案。",
+      "max_chars": 80,
+      "name_renderings": {},
+      "term_renderings": {
+        "CSV": "kept",
+        "Google Sheets": "MISUSE:kept-English"
+      },
+      "recurring_renderings": {
+        "roadmap": "路線圖",
+        "file": "檔案"
+      },
+      "notes": [
+        "leftover English: Sheets"
+      ],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": false,
+        "names": null,
+        "terms": false,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.545,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The translation is complete and natural Taiwan Mandarin, keeping Google Sheets and CSV as-is with no added padding."
+      }
+    },
+    {
+      "key": "term.import",
+      "source": "Smart Import is included in Workspace Pro.",
+      "output": "智慧匯入功能已包含在 Workspace Pro 方案中。",
+      "max_chars": 40,
+      "name_renderings": {},
+      "term_renderings": {
+        "Smart Import": "MISUSE",
+        "Workspace Pro": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": false,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.69,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The meaning is preserved and reads naturally, but 「功能」 and 「方案」 are padding the source does not have."
+      }
+    },
+    {
+      "key": "term.la",
+      "source": "Our support team in Los Angeles replies within 24 hours.",
+      "output": "我們位於洛杉磯的支援團隊將於 24 小時內回覆。",
+      "max_chars": 60,
+      "name_renderings": {},
+      "term_renderings": {
+        "Los Angeles": "洛杉磯"
+      },
+      "recurring_renderings": {
+        "team": "團隊"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.429,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate and natural; 「將於」 is a normal way to phrase the present-tense commitment without adding meaning."
+      }
+    },
+    {
+      "key": "term.event",
+      "source": "The meetup moves from San Francisco to Taipei on May 5, 2027.",
+      "output": "此聚會將於 2027 年 5 月 5 日從舊金山移至台北舉行。",
+      "max_chars": 60,
+      "name_renderings": {},
+      "term_renderings": {
+        "San Francisco": "舊金山",
+        "Taipei": "台北"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": true,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.508,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The translation keeps the full meaning with natural Taiwan phrasing, and 「舉行」 is a normal grammatical completion, not padding."
+      }
+    },
+    {
+      "key": "term.calendar",
+      "source": "Add this meeting to Google Calendar.",
+      "output": "將此會議新增至 Google Calendar。",
+      "max_chars": 40,
+      "name_renderings": {},
+      "term_renderings": {
+        "Google Calendar": "MISUSE:kept-English"
+      },
+      "recurring_renderings": {},
+      "notes": [
+        "leftover English: Calendar"
+      ],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": false,
+        "names": null,
+        "terms": false,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.667,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "The full meaning is kept, the brand name stays as-is, and the phrasing is natural Taiwan UI copy with no padding."
+      }
+    },
+    {
+      "key": "term.api",
+      "source": "Use the API to sync each SKU with your Shopify store.",
+      "output": "使用 API 將每個 SKU 與您的 Shopify 商店同步。",
+      "max_chars": 60,
+      "name_renderings": {},
+      "term_renderings": {
+        "API": "kept",
+        "SKU": "kept",
+        "Shopify": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": true,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.604,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "pass",
+        "reason": "Accurate, natural Taiwan Mandarin with no added words; 使用 renders the source's \"Use\"."
+      }
+    },
+    {
+      "key": "term.pay",
+      "source": "Pay with Apple Pay or PayPal. Total: $1250.00 USD.",
+      "output": "請使用 Apple Pay 或 PayPal 付款。總金額：$1250.00 美元。",
+      "max_chars": 60,
+      "name_renderings": {},
+      "term_renderings": {
+        "Apple Pay": "kept",
+        "PayPal": "kept"
+      },
+      "recurring_renderings": {},
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": false,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": true,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.84,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The meaning is fully kept, but the translation adds the softener 「請」, which is not in the source and changes the tone."
+      }
+    },
+    {
+      "key": "term.prd",
+      "source": "Write a PRD first, then turn on Smart Import in Settings.",
+      "output": "請先撰寫 PRD，再到「設定」中開啟智慧匯入功能。",
+      "max_chars": 60,
+      "name_renderings": {},
+      "term_renderings": {
+        "PRD": "kept",
+        "Smart Import": "MISUSE"
+      },
+      "recurring_renderings": {
+        "settings": "設定"
+      },
+      "notes": [],
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "line_breaks": true,
+        "translated": true,
+        "numbers": true,
+        "dates": null,
+        "times": null,
+        "currency": null,
+        "units": null,
+        "punctuation": true,
+        "locale_terms": true,
+        "leftover_english": true,
+        "names": null,
+        "terms": false,
+        "max_chars": true,
+        "length_ratio": true,
+        "register": null,
+        "cjk_spacing": true,
+        "name_consistency": null,
+        "term_consistency": true
+      },
+      "length_ratio": 0.439,
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "concise": "fail",
+        "reason": "The meaning and Taiwan phrasing are fine, but the translation adds 「請」 and 「功能」, which are not in the source."
+      }
+    }
+  ]
+}

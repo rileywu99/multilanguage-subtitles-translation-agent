@@ -1,0 +1,43 @@
+key,type,text,max_chars,鍵值,類型,文字,最大字元數
+btn.save,button,Save changes,20,btn.save,button,儲存變更,20
+btn.cancel,button,Cancel,12,btn.cancel,button,取消,12
+nav.settings,menu,Account settings,24,nav.settings,menu,帳戶設定,24
+toast.welcome,toast,"Welcome back, {name}!",40,toast.welcome,toast,歡迎回來，{name}！,40
+toast.messages,toast,You have %d new messages,40,toast.messages,toast,您有 %d 則新訊息,40
+toast.upload,toast,%s was uploaded successfully.,60,toast.upload,toast,%s 已成功上傳。,60
+cart.count,label,{{count}} items in your cart,40,cart.count,label,您的購物車中有 {{count}} 件商品,40
+legal.signup,legal,"By signing up, you agree to our <a href=""/terms"">Terms of Service</a> and <a href=""/privacy"">Privacy Policy</a>.",200,legal.signup,legal,"註冊即表示您同意我們的<a href=""/terms"">服務條款</a>與<a href=""/privacy"">隱私權政策</a>。",200
+banner.offer,banner,<strong>Limited offer:</strong> save 20% on annual plans until <em>Dec 31</em>.,120,banner.offer,banner,<strong>限時優惠：</strong>年繳方案可享 8 折優惠，活動至 <em>12 月 31 日</em>截止。,120
+pricing.pro,pricing,"Pro plan: $19.99/month, billed annually at $199.",80,pricing.pro,pricing,專業方案：每月 $19.99 美元，按年計費，共 $199 美元。,80
+pricing.storage,pricing,Includes 50 GB of storage and up to 5 team members.,80,pricing.storage,pricing,包含 50 GB 儲存空間，最多可供 5 位團隊成員使用。,80
+notice.maintenance,notice,"Scheduled maintenance on March 3, 2026 from 9:30 PM to 11:00 PM PT.",120,notice.maintenance,notice,系統將於 2026 年 3 月 3 日太平洋時間晚上 9:30 至 11:00 進行排定維護。,120
+help.temperature,help,Keep the device between 0°C and 35°C (32°F to 95°F).,80,help.temperature,help,請將裝置保持在攝氏0°C至35°C（華氏32°F至95°F）之間。,80
+integration.notion,integration,Connect your Notion workspace to sync pages automatically.,100,integration.notion,integration,連接您的 Notion 工作區，即可自動同步頁面。,100
+integration.stripe,integration,Payments are processed securely by Stripe. We never store your card number.,120,integration.stripe,integration,付款由 Stripe 安全處理，我們不會儲存您的卡號。,120
+marketing.lexingtonight,marketing,Follow Lexingtonight for daily life tips and diary posts.,100,marketing.lexingtonight,marketing,追蹤 Lexingtonight，獲取日常生活小技巧與日記文章。,100
+integration.slack,integration,Send a Slack alert when a Workflow fails in n8n.,100,integration.slack,integration,當 n8n 中的工作流程失敗時，傳送 Slack 通知。,100
+help.iphone,help,"Open the app on your iPhone and tap Share, then Add to Home Screen.",120,help.iphone,help,在您的 iPhone 上開啟應用程式，點選「分享」，然後選擇「加入主畫面」。,120
+onboarding.intro,onboarding,"Start by importing a CSV file. We will detect which columns need translation, keep IDs and prices untouched, and return a localized copy you can download in under a minute.",300,onboarding.intro,onboarding,請先匯入 CSV 檔案。我們會自動偵測哪些欄位需要翻譯，保留 ID 與價格不變，並在一分鐘內提供可供下載的在地化版本。,300
+legal.privacy,legal,We only use your data to provide the service. You can export or delete your account at any time from Settings > Privacy.,200,legal.privacy,legal,我們僅會使用您的資料來提供服務。您可以隨時在「設定 > 隱私權」中匯出或刪除您的帳號。,200
+email.shipped,email,"Hi {first_name}, your order #{order_id} has shipped and should arrive by {date}.",160,email.shipped,email,您好，{first_name}，您的訂單 #{order_id} 已出貨，預計將於 {date} 前送達。,160
+email.welcome,email,"Thanks for joining!
+Reply to this email if you have any questions.",160,email.welcome,email,"感謝您的加入！
+如有任何問題，歡迎回覆此電子郵件。",160
+error.upload,error,Upload failed at 75%. Please check your connection and try again.,120,error.upload,error,上傳在 75% 時失敗，請檢查您的網路連線後再試一次。,120
+tooltip.password,tooltip,Password must be at least 8 characters.<br>Use letters and numbers.,120,tooltip.password,tooltip,密碼長度須至少為 8 個字元。<br>請使用英文字母與數字。,120
+toast.invite,toast,%1$s invited you to join %2$s.,80,toast.invite,toast,%1$s邀請您加入%2$s。,80
+error.404,error,Error 404: Page not found,60,error.404,error,錯誤404：找不到頁面,60
+name.review,toast,Will Chen will review your PRD tomorrow.,60,name.review,toast,陳威爾明天將會審核您的PRD。,60
+name.share,notification,Grace Lin shared the Q3 Roadmap with you.,60,name.share,notification,林格雷絲與您分享了第三季路線圖。,60
+name.welcome,toast,"Thanks, Zhang Wei! Your API key is ready.",60,name.welcome,toast,謝謝您，張偉！您的API金鑰已準備就緒。,60
+name.comment,notification,Liu Yang commented on SKU-1043: please check the stock count.,80,name.comment,notification,劉洋在SKU-1043上留言：請確認庫存數量。,80
+name.assign,notification,Assigned to Grace Lin and Will Chen by Michael Johnson.,80,name.assign,notification,由麥可·強森指派給林格雷絲與陳威爾。,80
+name.grace,notification,Michael Johnson asked for a grace period on the invoice.,60,name.grace,notification,麥可·強森要求延長發票的繳款寬限期。,60
+term.sheets,help,Export your Roadmap to Google Sheets or download it as a CSV file.,80,term.sheets,help,將您的路線圖匯出至Google Sheets，或下載為CSV檔案。,80
+term.import,feature,Smart Import is included in Workspace Pro.,40,term.import,feature,智慧匯入功能已包含在Workspace Pro方案中。,40
+term.la,support,Our support team in Los Angeles replies within 24 hours.,60,term.la,support,我們位於洛杉磯的支援團隊將於24小時內回覆。,60
+term.event,event,"The meetup moves from San Francisco to Taipei on May 5, 2027.",60,term.event,event,此聚會將從舊金山改至台北舉行，時間為2027年5月5日。,60
+term.calendar,help,Add this meeting to Google Calendar.,40,term.calendar,help,將此會議新增至 Google 日曆。,40
+term.api,help,Use the API to sync each SKU with your Shopify store.,60,term.api,help,使用 API 將每個 SKU 與您的 Shopify 商店同步。,60
+term.pay,checkout,Pay with Apple Pay or PayPal. Total: $1250.00 USD.,60,term.pay,checkout,請使用 Apple Pay 或 PayPal 付款。總金額：1250.00 美元。,60
+term.prd,onboarding,"Write a PRD first, then turn on Smart Import in Settings.",60,term.prd,onboarding,請先撰寫 PRD，再於「設定」中開啟智慧匯入功能。,60

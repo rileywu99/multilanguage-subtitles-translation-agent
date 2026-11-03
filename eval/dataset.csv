@@ -26,3 +26,17 @@ error.upload,error,Upload failed at 75%. Please check your connection and try ag
 tooltip.password,tooltip,Password must be at least 8 characters.<br>Use letters and numbers.,120
 toast.invite,toast,%1$s invited you to join %2$s.,80
 error.404,error,Error 404: Page not found,60
+name.review,toast,Will Chen will review your PRD tomorrow.,60
+name.share,notification,Grace Lin shared the Q3 Roadmap with you.,60
+name.welcome,toast,"Thanks, Zhang Wei! Your API key is ready.",60
+name.comment,notification,Liu Yang commented on SKU-1043: please check the stock count.,80
+name.assign,notification,Assigned to Grace Lin and Will Chen by Michael Johnson.,80
+name.grace,notification,Michael Johnson asked for a grace period on the invoice.,60
+term.sheets,help,Export your Roadmap to Google Sheets or download it as a CSV file.,80
+term.import,feature,Smart Import is included in Workspace Pro.,40
+term.la,support,Our support team in Los Angeles replies within 24 hours.,60
+term.event,event,"The meetup moves from San Francisco to Taipei on May 5, 2027.",60
+term.calendar,help,Add this meeting to Google Calendar.,40
+term.api,help,Use the API to sync each SKU with your Shopify store.,60
+term.pay,checkout,Pay with Apple Pay or PayPal. Total: $1250.00 USD.,60
+term.prd,onboarding,"Write a PRD first, then turn on Smart Import in Settings.",60

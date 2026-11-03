@@ -1,0 +1,641 @@
+{
+  "files": [
+    "eval/results/v2/v2_run1.json",
+    "eval/results/v2/v2_run2.json",
+    "eval/results/v2/v2_run3.json"
+  ],
+  "rates": {
+    "non_empty": {
+      "check": "non_empty",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "placeholders": {
+      "check": "placeholders",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "html": {
+      "check": "html",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "line_breaks": {
+      "check": "line_breaks",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "translated": {
+      "check": "translated",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "numbers": {
+      "check": "numbers",
+      "type": "code",
+      "pass": 115,
+      "n": 120,
+      "pct": 95.8,
+      "failing_keys": [
+        "banner.offer",
+        "name.share"
+      ]
+    },
+    "dates": {
+      "check": "dates",
+      "type": "code",
+      "pass": 9,
+      "n": 9,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "times": {
+      "check": "times",
+      "type": "code",
+      "pass": 3,
+      "n": 3,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "currency": {
+      "check": "currency",
+      "type": "code",
+      "pass": 2,
+      "n": 6,
+      "pct": 33.3,
+      "failing_keys": [
+        "pricing.pro",
+        "term.pay"
+      ]
+    },
+    "units": {
+      "check": "units",
+      "type": "code",
+      "pass": 15,
+      "n": 21,
+      "pct": 71.4,
+      "failing_keys": [
+        "banner.offer",
+        "help.temperature"
+      ]
+    },
+    "punctuation": {
+      "check": "punctuation",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "locale_terms": {
+      "check": "locale_terms",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "leftover_english": {
+      "check": "leftover_english",
+      "type": "code",
+      "pass": 116,
+      "n": 120,
+      "pct": 96.7,
+      "failing_keys": [
+        "term.sheets",
+        "term.calendar"
+      ]
+    },
+    "names": {
+      "check": "names",
+      "type": "code",
+      "pass": 12,
+      "n": 18,
+      "pct": 66.7,
+      "failing_keys": [
+        "name.welcome",
+        "name.comment"
+      ]
+    },
+    "terms": {
+      "check": "terms",
+      "type": "code",
+      "pass": 43,
+      "n": 51,
+      "pct": 84.3,
+      "failing_keys": [
+        "term.sheets",
+        "term.import",
+        "term.prd",
+        "term.calendar"
+      ]
+    },
+    "max_chars": {
+      "check": "max_chars",
+      "type": "code",
+      "pass": 120,
+      "n": 120,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "length_ratio": {
+      "check": "length_ratio",
+      "type": "code",
+      "pass": 116,
+      "n": 117,
+      "pct": 99.1,
+      "failing_keys": [
+        "term.pay"
+      ]
+    },
+    "register": {
+      "check": "register",
+      "type": "code",
+      "pass": 40,
+      "n": 46,
+      "pct": 87,
+      "failing_keys": [
+        "integration.notion",
+        "integration.stripe",
+        "onboarding.intro",
+        "legal.privacy",
+        "email.shipped",
+        "term.api"
+      ]
+    },
+    "cjk_spacing": {
+      "check": "cjk_spacing",
+      "type": "code",
+      "pass": 63,
+      "n": 76,
+      "pct": 82.9,
+      "failing_keys": [
+        "help.temperature",
+        "error.404",
+        "name.review",
+        "name.welcome",
+        "name.comment",
+        "term.sheets",
+        "term.import",
+        "term.la",
+        "term.event",
+        "banner.offer",
+        "notice.maintenance"
+      ]
+    },
+    "name_consistency": {
+      "check": "name_consistency",
+      "type": "code",
+      "pass": 18,
+      "n": 18,
+      "pct": 100,
+      "failing_keys": []
+    },
+    "term_consistency": {
+      "check": "term_consistency",
+      "type": "code",
+      "pass": 72,
+      "n": 74,
+      "pct": 97.3,
+      "failing_keys": [
+        "legal.privacy"
+      ]
+    },
+    "judge_accuracy": {
+      "check": "judge_accuracy",
+      "type": "judge",
+      "pass": 112,
+      "n": 120,
+      "pct": 93.3,
+      "failing_keys": [
+        "onboarding.intro",
+        "name.grace",
+        "notice.maintenance",
+        "marketing.lexingtonight",
+        "name.share"
+      ]
+    },
+    "judge_fluency": {
+      "check": "judge_fluency",
+      "type": "judge",
+      "pass": 114,
+      "n": 120,
+      "pct": 95,
+      "failing_keys": [
+        "pricing.pro",
+        "help.temperature",
+        "name.share"
+      ]
+    },
+    "judge_concise": {
+      "check": "judge_concise",
+      "type": "judge",
+      "pass": 90,
+      "n": 120,
+      "pct": 75,
+      "failing_keys": [
+        "pricing.pro",
+        "pricing.storage",
+        "notice.maintenance",
+        "help.temperature",
+        "onboarding.intro",
+        "tooltip.password",
+        "name.grace",
+        "term.import",
+        "term.pay",
+        "term.prd",
+        "email.welcome",
+        "name.share",
+        "term.sheets",
+        "term.calendar"
+      ]
+    }
+  },
+  "structure": [
+    {
+      "input_rows": 40,
+      "output_rows": 40,
+      "rows_match": true,
+      "columns_match": true,
+      "passthrough_intact": true,
+      "detected_columns": [
+        "text"
+      ],
+      "flagged_count": 0,
+      "headers_out": [
+        "鍵值",
+        "類型",
+        "文字",
+        "最大字元數"
+      ]
+    },
+    {
+      "input_rows": 40,
+      "output_rows": 40,
+      "rows_match": true,
+      "columns_match": true,
+      "passthrough_intact": true,
+      "detected_columns": [
+        "text"
+      ],
+      "flagged_count": 0,
+      "headers_out": [
+        "鍵值",
+        "類型",
+        "文字",
+        "最大字元數"
+      ]
+    },
+    {
+      "input_rows": 40,
+      "output_rows": 40,
+      "rows_match": true,
+      "columns_match": true,
+      "passthrough_intact": true,
+      "detected_columns": [
+        "text"
+      ],
+      "flagged_count": 0,
+      "headers_out": [
+        "鍵",
+        "類型",
+        "文字",
+        "最大字元數"
+      ]
+    }
+  ],
+  "names": [
+    {
+      "name": "Will Chen",
+      "perRun": [
+        {
+          "renderings": [
+            "glossary:陳威爾"
+          ],
+          "occurrences": 2,
+          "in_glossary": "陳威爾"
+        },
+        {
+          "renderings": [
+            "glossary:陳威廉"
+          ],
+          "occurrences": 2,
+          "in_glossary": "陳威廉"
+        },
+        {
+          "renderings": [
+            "glossary:威爾·陳"
+          ],
+          "occurrences": 2,
+          "in_glossary": "威爾·陳"
+        }
+      ],
+      "verbatim_or_glossary": true,
+      "same_within_each_run": true,
+      "same_across_runs": false
+    },
+    {
+      "name": "Grace Lin",
+      "perRun": [
+        {
+          "renderings": [
+            "glossary:林格雷絲"
+          ],
+          "occurrences": 2,
+          "in_glossary": "林格雷絲"
+        },
+        {
+          "renderings": [
+            "glossary:林格蕾絲"
+          ],
+          "occurrences": 2,
+          "in_glossary": "林格蕾絲"
+        },
+        {
+          "renderings": [
+            "glossary:葛瑞絲·林"
+          ],
+          "occurrences": 2,
+          "in_glossary": "葛瑞絲·林"
+        }
+      ],
+      "verbatim_or_glossary": true,
+      "same_within_each_run": true,
+      "same_across_runs": false
+    },
+    {
+      "name": "Zhang Wei",
+      "perRun": [
+        {
+          "renderings": [
+            "changed"
+          ],
+          "occurrences": 1,
+          "in_glossary": null
+        },
+        {
+          "renderings": [
+            "changed"
+          ],
+          "occurrences": 1,
+          "in_glossary": null
+        },
+        {
+          "renderings": [
+            "changed"
+          ],
+          "occurrences": 1,
+          "in_glossary": null
+        }
+      ],
+      "verbatim_or_glossary": false,
+      "same_within_each_run": true,
+      "same_across_runs": true
+    },
+    {
+      "name": "Liu Yang",
+      "perRun": [
+        {
+          "renderings": [
+            "changed"
+          ],
+          "occurrences": 1,
+          "in_glossary": null
+        },
+        {
+          "renderings": [
+            "changed"
+          ],
+          "occurrences": 1,
+          "in_glossary": null
+        },
+        {
+          "renderings": [
+            "changed"
+          ],
+          "occurrences": 1,
+          "in_glossary": null
+        }
+      ],
+      "verbatim_or_glossary": false,
+      "same_within_each_run": true,
+      "same_across_runs": true
+    },
+    {
+      "name": "Michael Johnson",
+      "perRun": [
+        {
+          "renderings": [
+            "glossary:麥可·強森"
+          ],
+          "occurrences": 2,
+          "in_glossary": "麥可·強森"
+        },
+        {
+          "renderings": [
+            "glossary:麥可·強森"
+          ],
+          "occurrences": 2,
+          "in_glossary": "麥可·強森"
+        },
+        {
+          "renderings": [
+            "glossary:麥可·強森"
+          ],
+          "occurrences": 2,
+          "in_glossary": "麥可·強森"
+        }
+      ],
+      "verbatim_or_glossary": true,
+      "same_within_each_run": true,
+      "same_across_runs": true
+    }
+  ],
+  "misuse": [
+    {
+      "run": 1,
+      "key": "term.sheets",
+      "term": "Google Sheets",
+      "v": "MISUSE:kept-English"
+    },
+    {
+      "run": 1,
+      "key": "term.import",
+      "term": "Smart Import",
+      "v": "MISUSE"
+    },
+    {
+      "run": 1,
+      "key": "term.prd",
+      "term": "Smart Import",
+      "v": "MISUSE"
+    },
+    {
+      "run": 2,
+      "key": "term.sheets",
+      "term": "Google Sheets",
+      "v": "MISUSE:kept-English"
+    },
+    {
+      "run": 2,
+      "key": "term.import",
+      "term": "Smart Import",
+      "v": "MISUSE"
+    },
+    {
+      "run": 2,
+      "key": "term.calendar",
+      "term": "Google Calendar",
+      "v": "MISUSE:kept-English"
+    },
+    {
+      "run": 2,
+      "key": "term.prd",
+      "term": "Smart Import",
+      "v": "MISUSE"
+    },
+    {
+      "run": 3,
+      "key": "term.calendar",
+      "term": "Google Calendar",
+      "v": "MISUSE:kept-English"
+    }
+  ],
+  "inconsistentInFile": [
+    {
+      "run": 1,
+      "items": [
+        {
+          "term": "account",
+          "renderings": [
+            "帳戶",
+            "帳號"
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "items": [
+        {
+          "term": "account",
+          "renderings": [
+            "帳戶",
+            "帳號"
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "items": []
+    }
+  ],
+  "crossRunTerms": [
+    {
+      "term": "Google Sheets",
+      "renderings": [
+        "MISUSE:kept-English",
+        "Google 試算表"
+      ]
+    },
+    {
+      "term": "Smart Import",
+      "renderings": [
+        "MISUSE",
+        "kept"
+      ]
+    },
+    {
+      "term": "Google Calendar",
+      "renderings": [
+        "Google 日曆",
+        "MISUSE:kept-English"
+      ]
+    }
+  ],
+  "perRun": [
+    {
+      "run": 1,
+      "time_s": 28.035,
+      "per_row_ms": 701,
+      "cost_pipeline": 0.06354,
+      "cost_per_100": 0.1588,
+      "cost_judge": 0.23052,
+      "register": {
+        "您": 16,
+        "你": 0,
+        "both": 0
+      },
+      "spacing": {
+        "spaced": 46,
+        "tight": 21
+      },
+      "glossary": {
+        "Will Chen": "陳威爾",
+        "Grace Lin": "林格雷絲",
+        "Michael Johnson": "麥可·強森"
+      }
+    },
+    {
+      "run": 2,
+      "time_s": 35.47,
+      "per_row_ms": 887,
+      "cost_pipeline": 0.06702,
+      "cost_per_100": 0.1676,
+      "cost_judge": 0.23028,
+      "register": {
+        "您": 16,
+        "你": 0,
+        "both": 0
+      },
+      "spacing": {
+        "spaced": 67,
+        "tight": 1
+      },
+      "glossary": {
+        "Will Chen": "陳威廉",
+        "Grace Lin": "林格蕾絲",
+        "Michael Johnson": "麥可·強森"
+      }
+    },
+    {
+      "run": 3,
+      "time_s": 29.44,
+      "per_row_ms": 736,
+      "cost_pipeline": 0.07043,
+      "cost_per_100": 0.1761,
+      "cost_judge": 0.22446,
+      "register": {
+        "您": 8,
+        "你": 6,
+        "both": 0
+      },
+      "spacing": {
+        "spaced": 57,
+        "tight": 14
+      },
+      "glossary": {
+        "Will Chen": "威爾·陳",
+        "Grace Lin": "葛瑞絲·林",
+        "Michael Johnson": "麥可·強森"
+      }
+    }
+  ],
+  "total_cost_usd": 0.8862
+}

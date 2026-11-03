@@ -1,6 +1,130 @@
 # CSV Localizer: small evaluation (EN to zh-TW)
 
-Run on 2026-11-02 (PT) against the real pipeline in `src/lib` (no mocks, no demo replay). Every number below comes from the JSON files in `eval/results/`.
+Run on 2026-11-02 (PT) against the real pipeline in `src/lib` (no mocks, no demo replay). Every number comes from the JSON files in `eval/results/`.
+
+This file has two parts:
+- **Round 2 (top):** Riley's quality criteria. 40 rows, 3 runs, on the code with the header fix. Results are in `eval/results/v2/`.
+- **Round 1 (below):** the first 26-row eval and the header locale fix, with before and after numbers. Results are in `eval/results/*.json`.
+
+## Criteria table (round 2: 40 rows × 3 runs = 120 row-translations)
+
+A pass rate counts only the rows a check applies to. For example, `dates` only applies to rows that contain a date.
+
+| # | Criterion | Check | Type | Pass rate | Main failure |
+|---|---|---|---|---|---|
+| 1 | Concise wording | No added words, padding or explanation | judge | **75.0%** (90/120) | Adds 「請」, 「系統將於…進行」, 「功能」/「方案」, 「自動」, 「產品」 that the source does not have |
+| 1 | | zh/en length ratio inside the file's normal range (1.5 × IQR) | code | 99.1% (116/117) | One outlier: `term.pay` kept "USD" next to the amount |
+| 1 | | Within `max_chars` | code | 100% (120/120) | None. The limits in this set are generous for Chinese |
+| 2 | Person names | Kept verbatim or rendered by the pipeline's name glossary | code | **66.7%** (12/18) | Pinyin names turned into guessed characters: Zhang Wei → 張偉, Liu Yang → 劉洋, in all 3 runs |
+| 2 | | Same rendering in every row of one file | code | 100% (18/18) | None |
+| 2 | | Same rendering across the 3 runs | code | **3/5 names stable, 1/5 stable and acceptable** | English names are transliterated, differently each run: Will Chen → 陳威爾 / 陳威廉 / 威爾·陳 |
+| 3 | Proper nouns | Kept as-is, or the official zh-TW form | code | **84.3%** (43/51), **8 misuses** | Google Sheets and Google Calendar left in English (4); Smart Import translated to 「智慧匯入」 (4) |
+| 3 | | Same source term, same rendering in every row of one file | code | 97.3% (72/74), **2 inconsistencies** | "account" → 帳戶 in one row and 帳號 in another (runs 1 and 2) |
+| 3 | | Same rendering across the 3 runs | code | **3 terms change** | Google Sheets, Google Calendar and Smart Import each come out differently depending on the run |
+| 4 | Format | Placeholders | code | 100% (120/120) | None |
+| 4 | | HTML tags | code | 100% (120/120) | None |
+| 4 | | Line breaks | code | 100% (120/120) | None |
+| 4 | | Structure (rows, columns, pass-through columns, no empty cells) | code | 3/3 files | None |
+| 4 | | Numbers preserved | code | 95.8% (115/120) | Both misses are correct zh-TW: 「8 折」 for "20% off" and 「第三季」 for "Q3" (checker false positives) |
+| 4 | | Dates in Taiwan format (2026 年 3 月 3 日) | code | 100% (9/9) | None |
+| 4 | | Times (上午/下午/晚上, no AM/PM) | code | 100% (3/3) | None |
+| 4 | | Currency (same USD figure, one currency marker) | code | **33.3%** (2/6) | 「$19.99 美元」 marks the currency twice, in all 3 runs |
+| 4 | | Units (°C, °F, GB, % kept, not doubled) | code | 71.4% (15/21) | 「攝氏0°C」 in all 3 runs; the rest are the 「8 折」 false positive |
+| 4 | | Full-width punctuation in Chinese text | code | 100% (120/120) | None |
+| 5 | Locale terms | No Mainland terms (文本, 字符, 軟件…) | code | 100% (120/120) | None |
+| 5 | Register | One form of "you" (您 or 你) per file | code | 87.0% of rows (40/46); **2/3 files** | Run 3 mixed 您 (8 rows) and 你 (6 rows) in one file |
+| 5 | Leftover English | No untranslated English words | code | 96.7% (116/120) | "Sheets", "Calendar" (the Google product names above) |
+| 5 | Meaning accuracy | Full meaning, right word sense | judge | 93.3% (112/120) | 「延長…寬限期」 adds "extend" to "asked for a grace period" (3/3 runs); 「自動」 added |
+| 5 | Fluency | Natural Taiwan Mandarin | judge | 95.0% (114/120) | 「$19.99 美元」; 「攝氏0°C」; 「林格蕾絲」 as a name |
+| 5+ | Spacing (added: the data showed it) | Chinese next to Latin letters or digits spaced the same way across the file | code | 82.9% (63/76) | One file has both 「8 個字元」 and 「錯誤404」 |
+
+## Round 2 details
+
+### What changed from round 1
+- **14 new rows, 40 in total.**
+  - 6 rows with person names: English names (Will Chen, Grace Lin, Michael Johnson) and pinyin names (Zhang Wei, Liu Yang). "Will" also appears as a verb ("Will Chen will review") and "grace" as a common word ("a grace period").
+  - 8 rows with proper nouns: product and feature names (Smart Import, Workspace Pro, Shopify, Apple Pay, PayPal), products with an official zh-TW name (Google Sheets → Google 試算表, Google Calendar → Google 日曆), places (Los Angeles → 洛杉磯, San Francisco → 舊金山, Taipei → 台北/臺北) and acronyms (API, PRD, SKU, CSV).
+  - The new rows have tighter, realistic `max_chars` limits.
+- **New checks.** All code checks are in `eval/checks.mjs`. They are pure functions, so `eval/rescore.mjs` can re-apply them to saved outputs with no API calls.
+- **Judge.** Still Claude Opus 5.5, effort `low`, one call per row. It now answers three pass/fail questions: accuracy, fluency and a new **concise** question (no added words, padding or explanation).
+- **Code under test.** Current `main`, including the round 1 header fix. No product code changed in round 2.
+- **Policy used for proper nouns.** Product, feature and brand names stay exactly as written. A term with an official zh-TW form must use it. Recurring UI words (account, file, message, email, settings, plan, team, roadmap) may use any reasonable rendering, but only one per file.
+- **Policy used for names.** A name must be kept verbatim, or rendered with whatever the pipeline's own glossary pass decided for that run. It must also be the same in every row and in every run.
+
+### Per-name results
+
+| Name | Rows | Run 1 | Run 2 | Run 3 | Kept or glossary | Same in file | Same across runs |
+|---|---|---|---|---|---|---|---|
+| Will Chen | 2 | 陳威爾 (glossary) | 陳威廉 (glossary) | 威爾·陳 (glossary) | yes | yes | **no** |
+| Grace Lin | 2 | 林格雷絲 (glossary) | 林格蕾絲 (glossary) | 葛瑞絲·林 (glossary) | yes | yes | **no** |
+| Michael Johnson | 2 | 麥可·強森 (glossary) | 麥可·強森 (glossary) | 麥可·強森 (glossary) | yes | yes | yes |
+| Zhang Wei | 1 | 張偉 | 張偉 | 張偉 | **no** (not in glossary) | n/a | same, but a guess |
+| Liu Yang | 1 | 劉洋 | 劉洋 | 劉洋 | **no** (not in glossary) | n/a | same, but a guess |
+
+- "Will" as a verb and "grace period" were read correctly in all 3 runs (寬限期, not a name).
+- **Why names drift.** The glossary pass (`src/lib/glossary.ts`) is told to transliterate names "into a natural, commonly-used name in the target script". So it turns English names into Chinese, and each run picks different characters.
+- **Why pinyin names fail.** Zhang Wei and Liu Yang appear only once, so they are not in the glossary. The batch model then picks characters on its own. 張偉 is only one of several possible spellings (章偉, 張威…), so the output can name the wrong person.
+- **Suggested fix (not applied).** For zh targets, keep Latin-script names verbatim unless the user supplies a mapping. This is a product decision for Riley. Many Taiwan apps show account names as typed.
+
+### Proper-noun misuse and inconsistency counts
+
+- **Misuse: 8 of 51 term occurrences.**
+  - Google Sheets left in English (runs 1 and 2).
+  - Google Calendar left in English (runs 2 and 3).
+  - Smart Import translated to 「智慧匯入」 (runs 1 and 2, both rows each time).
+  - Acronyms, brands and places were always right: API, PRD, SKU, CSV, Shopify, Apple Pay, PayPal, 洛杉磯, 舊金山, 台北.
+- **In-file inconsistency: 2.** "account" was 帳戶 in the Settings row and 帳號 in the privacy row (runs 1 and 2).
+- **Cross-run inconsistency: 3 terms.** Google Sheets, Google Calendar and Smart Import each depend on the run.
+
+### Time and cost (round 2, 40 rows)
+
+| | Run 1 | Run 2 | Run 3 | Mean |
+|---|---|---|---|---|
+| Total time | 28.0 s | 35.5 s | 29.4 s | 31.0 s |
+| Per row | 701 ms | 887 ms | 736 ms | 775 ms |
+| Pipeline cost, 40 rows | $0.0635 | $0.0670 | $0.0704 | $0.0670 |
+| Pipeline cost per 100 rows | $0.159 | $0.168 | $0.176 | **$0.168** |
+| Judge cost | $0.231 | $0.230 | $0.224 | $0.228 |
+
+Round 2 spend: **$0.886** (pipeline $0.201, judge $0.685). Round 1 was $1.03, so the whole eval cost **about $1.92** in prepaid API credits.
+
+### Round 2 limits
+- **Checker false positives.** `numbers` and `units` flag correct localizations (「8 折」, 「第三季」). They are counted as failures in the table but named in the "Main failure" column.
+- **Rules are encoded policy.** "Smart Import stays English" and "Google Sheets must be Google 試算表" are rules this eval sets, not facts. Riley may decide otherwise.
+- **The concise judge is strict by design.** It fails 「請」 on imperatives, which many Taiwan UI style guides accept. That is why it is the right thing for Riley to hand-label.
+- **Small sample.** 3 runs; cross-run results are based on 3 samples per name or term.
+
+### Rows for Riley to hand-label on the new criteria
+
+Mark pass or fail for each column, then compare with the judge and code results. Run files are in `results/v2/`.
+
+| # | Run | key | Source | Translation | Judge (acc / flu / concise) | Code flags | Riley: names / terms / concise / register |
+|---|---|---|---|---|---|---|---|
+| 1 | 1 | name.share | Grace Lin shared the Q3 Roadmap with you. | 林格雷絲與您分享了第三季路線圖。 | pass / pass / pass | numbers (Q3 → 第三季) | |
+| 2 | 2 | name.welcome | Thanks, Zhang Wei! Your API key is ready. | 謝謝您，張偉！您的 API 金鑰已經準備好了。 | pass / pass / pass | names (pinyin → 張偉) | |
+| 3 | 1 | term.import | Smart Import is included in Workspace Pro. | 智慧匯入功能已包含在Workspace Pro方案中。 | pass / pass / fail | terms (Smart Import translated), spacing | |
+| 4 | 3 | pricing.pro | Pro plan: $19.99/month, billed annually at $199. | 專業方案：每月 $19.99 美元，年繳 $199 美元。 | pass / fail / fail | currency (double marker) | |
+| 5 | 3 | term.calendar | Add this meeting to Google Calendar. | 把這個會議加到 Google Calendar 裡吧！ | pass / pass / fail | terms (official form is Google 日曆), leftover English | |
+
+Row 5 is also a register check: 「吧！」 is casual, and that run mixed 您 and 你.
+
+### Reproduce round 2
+
+```bash
+cd translation-agent
+env -u NODE_OPTIONS node_modules/.bin/tsc -p eval/tsconfig.eval.json
+for i in 1 2 3; do env -u NODE_OPTIONS node --env-file-if-exists=.env --env-file-if-exists=.env.local eval/run_eval.mjs v2_run$i; done
+env -u NODE_OPTIONS node eval/rescore.mjs eval/results/v2/v2_run*.json   # optional, offline
+env -u NODE_OPTIONS node eval/aggregate.mjs eval/results/v2/v2_run1.json eval/results/v2/v2_run2.json eval/results/v2/v2_run3.json
+```
+
+The double-currency rule was added to `checks.mjs` after the 3 runs, once the judge had pointed out the problem. The saved runs were rescored offline with `rescore.mjs`, which makes no API calls.
+
+---
+
+# Round 1: first eval and the header locale fix
+
+The harness for round 1 is `eval/run_eval.mjs` at commit `d0c37c4`. The current file is the round 2 version.
 
 ## 1. What was tested
 
@@ -10,7 +134,7 @@ Run on 2026-11-02 (PT) against the real pipeline in `src/lib` (no mocks, no demo
 
 ## 2. Eval set (`eval/dataset.csv`)
 
-26 rows, 4 columns: `key`, `type`, `text`, `max_chars`. Only `text` should be translated; `key`, `type` and `max_chars` must pass through untouched.
+Round 1 used the first 26 rows (rows 27 to 40 were added in round 2). 4 columns: `key`, `type`, `text`, `max_chars`. Only `text` should be translated; `key`, `type` and `max_chars` must pass through untouched.
 
 | Category | Rows | Examples |
 |---|---|---|

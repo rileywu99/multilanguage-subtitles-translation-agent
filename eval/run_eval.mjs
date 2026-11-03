@@ -1,19 +1,22 @@
-// CSV Localizer eval harness.
+// CSV Localizer eval harness, v2 (Riley's quality criteria, 2026-11-02).
+// v1 of this file (commit d0c37c4) produced the files in eval/results/*.json.
+// v2 writes to eval/results/v2/.
 //
 // Runs the real pipeline (src/lib, compiled to eval/.build by tsc) on
-// eval/dataset.csv -> zh-TW, then scores the output in two layers:
-//   1. deterministic code checks (placeholders, HTML, numbers, brands, shape)
-//   2. an LLM judge on a different model (Opus 5.5) for accuracy + fluency
-// Tokens are counted from every API response's `usage` field.
+// eval/dataset.csv -> zh-TW, then scores each row with deterministic code
+// checks and an LLM judge on a different model (Opus 5.5). Tokens come from
+// every API response's `usage` field.
 //
 // Usage (from translation-agent/):
 //   env -u NODE_OPTIONS node_modules/.bin/tsc -p eval/tsconfig.eval.json
 //   env -u NODE_OPTIONS node --env-file-if-exists=.env --env-file-if-exists=.env.local eval/run_eval.mjs <label>
+//   env -u NODE_OPTIONS node eval/aggregate.mjs <label1> <label2> <label3>
 
 import { createRequire } from "node:module";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { codeChecks, fileChecks, CHECKS } from "./checks.mjs";
 
 const require = createRequire(import.meta.url);
 const here = dirname(fileURLToPath(import.meta.url));
@@ -33,22 +36,19 @@ const PRICES = {
 };
 const JUDGE_MODEL = "claude-opus-5-5";
 const TARGET = { code: "zh-TW", name: "Chinese (Traditional)" };
-const BRANDS = ["Notion", "Stripe", "Lexingtonight", "Slack", "n8n", "iPhone", "CSV"];
 
 // ---------- usage metering ----------
-const usage = []; // { stage, model, input, output, ms }
+const usage = [];
+let glossaryRaw = null;
 function meter(client, stage) {
   const orig = client.messages.create.bind(client.messages);
   client.messages.create = async (params, opts) => {
     const t0 = performance.now();
     const res = await orig(params, opts);
-    usage.push({
-      stage: stage(params),
-      model: params.model,
-      input: res.usage?.input_tokens ?? 0,
-      output: res.usage?.output_tokens ?? 0,
-      ms: Math.round(performance.now() - t0),
-    });
+    const st = stage(params);
+    if (st === "glossary") glossaryRaw = res.content.filter((b) => b.type === "text").map((b) => b.text).join("");
+    usage.push({ stage: st, model: params.model, input: res.usage?.input_tokens ?? 0,
+      output: res.usage?.output_tokens ?? 0, ms: Math.round(performance.now() - t0) });
     return res;
   };
 }
@@ -62,90 +62,37 @@ meter(pipelineClient, (p) => {
 });
 const judgeClient = new Anthropic();
 meter(judgeClient, () => "judge");
-
-function cost(rows) {
-  return rows.reduce((sum, u) => {
-    const p = PRICES[u.model];
-    if (!p) throw new Error(`No price for ${u.model}`);
-    return sum + (u.input * p.in + u.output * p.out) / 1e6;
-  }, 0);
-}
-
-// ---------- code checks ----------
-const PLACEHOLDER = /\{\{[^{}]+\}\}|\{[A-Za-z_][A-Za-z0-9_]*\}|%(?:\d+\$)?[sd]/g;
-const TAG = /<\/?[a-zA-Z][^>]*>/g;
-const NUMBER = /\d+(?:[.,:]\d+)*/g;
-// Mainland-China UI terms that a zh-TW file should not contain (Taiwan form in comment).
-const MAINLAND_TERMS = [
-  "文本", // 文字
-  "字符", // 字元
-  "軟件", // 軟體
-  "網絡", // 網路
-  "信息", // 訊息/資訊
-  "默認", // 預設
-  "視頻", // 影片
-  "鏈接", // 連結
-  "設置", // 設定
-  "登錄", // 登入
-  "賬", // 帳
-];
-const mainlandHits = (s) => MAINLAND_TERMS.filter((t) => (s ?? "").includes(t));
-const multiset = (arr) => arr.reduce((m, x) => m.set(x, (m.get(x) ?? 0) + 1), new Map());
-function sameMultiset(a, b) {
-  const ma = multiset(a), mb = multiset(b);
-  if (ma.size !== mb.size) return false;
-  for (const [k, v] of ma) if (mb.get(k) !== v) return false;
-  return true;
-}
-function subsetMultiset(a, b) {
-  const mb = multiset(b);
-  for (const [k, v] of multiset(a)) if ((mb.get(k) ?? 0) < v) return false;
-  return true;
-}
-
-function codeChecks(src, out) {
-  const checks = {};
-  checks.non_empty = Boolean(out && out.trim());
-  checks.placeholders = sameMultiset(src.match(PLACEHOLDER) ?? [], (out ?? "").match(PLACEHOLDER) ?? []);
-  checks.html = JSON.stringify(src.match(TAG) ?? []) === JSON.stringify((out ?? "").match(TAG) ?? []);
-  checks.numbers = subsetMultiset(src.match(NUMBER) ?? [], (out ?? "").match(NUMBER) ?? []);
-  checks.brands = BRANDS.filter((b) => src.includes(b)).every((b) => (out ?? "").includes(b));
-  checks.line_breaks = (src.match(/\n/g) ?? []).length === ((out ?? "").match(/\n/g) ?? []).length;
-  checks.locale_terms = mainlandHits(out).length === 0;
-  checks.translated = out !== src; // copied-through English counts as a miss
-  return checks;
-}
+const cost = (rows) => rows.reduce((s, u) => s + (u.input * PRICES[u.model].in + u.output * PRICES[u.model].out) / 1e6, 0);
 
 // ---------- judge ----------
 const JUDGE_SYSTEM =
   "You are a professional English to Traditional Chinese (Taiwan, zh-TW) software localization reviewer. " +
-  "You get one source UI string and its translation. Judge two things independently. " +
-  "ACCURACY: pass only if the full meaning is kept with no omissions, additions or mistranslations. " +
-  "Placeholders like {name}, %s, {{count}}, HTML tags, brand names and numbers are expected to stay as-is; " +
-  "do not fail a row because they are untranslated. " +
+  "You get one source UI string and its translation. Judge three things independently. " +
+  "ACCURACY: pass only if the full meaning is kept with no omissions, additions or mistranslations, and every " +
+  "word is read in the right sense (e.g. a person's name vs. the same word used as a common noun or verb). " +
+  "Placeholders like {name}, %s, {{count}}, HTML tags, person names, brand/product names, acronyms and numbers " +
+  "may stay as-is; do not fail a row for that. " +
   "FLUENCY: pass only if it reads like natural Taiwan-Mandarin product copy (Taiwan terms, Traditional characters, " +
-  "no Mainland terms like 軟件/網絡/信息, no stiff translationese). Minor style preferences are not a fail. " +
-  'Reply with ONLY JSON: {"accuracy":"pass"|"fail","fluency":"pass"|"fail","reason":"one short sentence"}';
+  "no Mainland terms, no stiff translationese). Minor style preferences are not a fail. " +
+  "CONCISE: pass only if the translation adds no words, padding, softeners or explanation the source does not " +
+  "have (e.g. adding 「系統」, 「使用」, 「請」 or a clarifying clause that is not in the source is a fail when it " +
+  "changes length or tone noticeably; normal grammatical particles are fine). " +
+  'Reply with ONLY JSON: {"accuracy":"pass"|"fail","fluency":"pass"|"fail","concise":"pass"|"fail","reason":"one short sentence"}';
 
 async function judgeRow(src, out) {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const res = await judgeClient.messages.create({
-        model: JUDGE_MODEL,
-        max_tokens: 4000,
-        output_config: { effort: "low" },
-        system: JUDGE_SYSTEM,
+        model: JUDGE_MODEL, max_tokens: 4000, output_config: { effort: "low" }, system: JUDGE_SYSTEM,
         messages: [{ role: "user", content: JSON.stringify({ source: src, translation: out }) }],
       });
       const text = res.content.filter((b) => b.type === "text").map((b) => b.text).join("").trim();
-      const json = JSON.parse(text.replace(/^```(?:json)?\s*|\s*```$/g, ""));
-      return json;
+      return JSON.parse(text.replace(/^```(?:json)?\s*|\s*```$/g, ""));
     } catch (err) {
-      if (attempt === 1) return { accuracy: "error", fluency: "error", reason: String(err).slice(0, 200) };
+      if (attempt === 1) return { accuracy: "error", fluency: "error", concise: "error", reason: String(err).slice(0, 200) };
     }
   }
 }
-
 async function pool(items, n, fn) {
   const out = new Array(items.length);
   let i = 0;
@@ -156,9 +103,7 @@ async function pool(items, n, fn) {
 }
 
 // ---------- run ----------
-const csvText = readFileSync(join(here, "dataset.csv"), "utf8");
-const table = csvLib.parseCsv(csvText);
-
+const table = csvLib.parseCsv(readFileSync(join(here, "dataset.csv"), "utf8"));
 const t0 = performance.now();
 const columns = csvLib.detectTranslatableColumns(table);
 const context = await analyzeContext(table, columns);
@@ -166,10 +111,13 @@ const result = await translateTable(table, columns, [TARGET], context);
 const pipelineMs = Math.round(performance.now() - t0);
 const outCsv = csvLib.toCsv(result);
 const reparsed = csvLib.parseCsv(outCsv);
+const translatedHeader = result.headers[table.headers.length + table.headers.indexOf("text")];
 
-// Translated column = the header appended for the "text" column.
-const textIdx = table.headers.indexOf("text");
-const translatedHeader = result.headers[table.headers.length + textIdx];
+let glossary = {};
+try {
+  const parsed = JSON.parse(glossaryRaw.trim().replace(/^```(?:json)?\s*|\s*```$/g, ""));
+  for (const e of parsed) for (const f of e.surfaceForms ?? []) glossary[f] = e.translation;
+} catch { glossary = { _unparsed: glossaryRaw }; }
 
 const shape = {
   input_rows: table.rows.length,
@@ -177,82 +125,45 @@ const shape = {
   rows_match: reparsed.rows.length === table.rows.length,
   columns_match: reparsed.headers.length === table.headers.length * 2,
   passthrough_intact: table.rows.every((r, i) =>
-    table.headers.filter((h) => !columns.includes(h)).every((h, j) => {
+    table.headers.filter((h) => !columns.includes(h)).every((h) => {
       const outHeader = result.headers[table.headers.length + table.headers.indexOf(h)];
       return reparsed.rows[i][h] === r[h] && reparsed.rows[i][outHeader] === r[h];
     })),
   detected_columns: columns,
   flagged_count: result.flaggedCount,
+  headers_out: result.headers.slice(table.headers.length),
 };
 
 const rows = table.rows.map((r, i) => {
   const out = reparsed.rows[i]?.[translatedHeader] ?? "";
-  return { key: r.key, source: r.text, output: out, checks: codeChecks(r.text, out) };
+  return { key: r.key, source: r.text, output: out, max_chars: Number(r.max_chars) || null };
 });
+rows.forEach((r) => { r.checks = codeChecks(r, glossary); });
+const file = fileChecks(rows, glossary); // adds file-relative checks (ratio, register, spacing, term + name consistency) to rows
 
-const judgments = await pool(rows, 6, (r) => judgeRow(r.source, r.output));
-rows.forEach((r, i) => {
-  r.judge = judgments[i];
-  r.code_pass = Object.values(r.checks).every(Boolean) && shape.rows_match && shape.columns_match;
-  r.judge_pass = r.judge.accuracy === "pass" && r.judge.fluency === "pass";
-});
-
-// Column headers are part of the localized file too: same locale check + judge.
-const headerRows = table.headers.map((h, i) => ({ source: h, output: result.headers[table.headers.length + i] }));
-const headerJudgments = await pool(headerRows, 4, (h) => judgeRow(`[CSV column header] ${h.source}`, h.output));
-headerRows.forEach((h, i) => {
-  h.mainland_terms = mainlandHits(h.output);
-  h.judge = headerJudgments[i];
-  h.pass = h.mainland_terms.length === 0 && h.judge.accuracy === "pass" && h.judge.fluency === "pass";
-});
+const judgments = await pool(rows, 8, (r) => judgeRow(r.source, r.output));
+rows.forEach((r, i) => { r.judge = judgments[i]; });
 
 const pipelineUsage = usage.filter((u) => u.stage !== "judge");
 const judgeUsage = usage.filter((u) => u.stage === "judge");
-const n = rows.length;
-const pct = (k) => Math.round((rows.filter(k).length / n) * 1000) / 10;
-const checkNames = Object.keys(rows[0].checks);
 const summary = {
-  label,
-  run_at: new Date().toISOString(),
-  translation_model: TRANSLATION_MODEL,
-  utility_model: UTILITY_MODEL,
-  judge_model: JUDGE_MODEL,
-  rows: n,
-  shape,
-  code_pass_rate: pct((r) => r.code_pass),
-  code_check_pass_rates: Object.fromEntries(checkNames.map((c) => [c, pct((r) => r.checks[c])])),
-  judge_pass_rate: pct((r) => r.judge_pass),
-  judge_accuracy_rate: pct((r) => r.judge.accuracy === "pass"),
-  judge_fluency_rate: pct((r) => r.judge.fluency === "pass"),
-  header_pass: `${headerRows.filter((h) => h.pass).length}/${headerRows.length}`,
-  header_locale_pass: `${headerRows.filter((h) => h.mainland_terms.length === 0).length}/${headerRows.length}`,
-  headers: headerRows,
-  both_layers_pass_rate: pct((r) => r.code_pass && r.judge_pass),
-  time_total_s: pipelineMs / 1000,
-  time_per_row_ms: Math.round(pipelineMs / n),
-  api_calls: pipelineUsage.length,
-  tokens: {
-    input: pipelineUsage.reduce((s, u) => s + u.input, 0),
-    output: pipelineUsage.reduce((s, u) => s + u.output, 0),
-  },
+  label, run_at: new Date().toISOString(), harness: "v2",
+  translation_model: TRANSLATION_MODEL, utility_model: UTILITY_MODEL, judge_model: JUDGE_MODEL,
+  rows: rows.length, shape, context, glossary, file,
+  time_total_s: pipelineMs / 1000, time_per_row_ms: Math.round(pipelineMs / rows.length),
+  tokens: { input: pipelineUsage.reduce((s, u) => s + u.input, 0), output: pipelineUsage.reduce((s, u) => s + u.output, 0) },
   cost_pipeline_usd: +cost(pipelineUsage).toFixed(5),
-  cost_per_100_rows_usd: +((cost(pipelineUsage) / n) * 100).toFixed(4),
+  cost_per_100_rows_usd: +((cost(pipelineUsage) / rows.length) * 100).toFixed(4),
   cost_judge_usd: +cost(judgeUsage).toFixed(5),
   usage_by_stage: pipelineUsage,
 };
+mkdirSync(join(here, "results", "v2"), { recursive: true });
+writeFileSync(join(here, "results", "v2", `${label}.json`), JSON.stringify({ summary, rows }, null, 2));
+writeFileSync(join(here, "results", "v2", `${label}.output.csv`), outCsv);
 
-mkdirSync(join(here, "results"), { recursive: true });
-writeFileSync(join(here, "results", `${label}.json`), JSON.stringify({ summary, rows }, null, 2));
-writeFileSync(join(here, "results", `${label}.output.csv`), outCsv);
-
-console.log(JSON.stringify({ ...summary, usage_by_stage: undefined, headers: undefined }, null, 2));
-for (const h of headerRows) console.log(`[header] ${h.source} -> ${h.output} mainland=${h.mainland_terms.join(",") || "-"} judge=${h.judge.accuracy}/${h.judge.fluency} (${h.judge.reason})`);
-for (const r of rows) {
-  const failed = Object.entries(r.checks).filter(([, v]) => !v).map(([k]) => k);
-  if (failed.length || !r.judge_pass) {
-    console.log(`\n[${r.key}] code_fail=${failed.join(",") || "-"} judge=${r.judge.accuracy}/${r.judge.fluency}`);
-    console.log(`  src: ${JSON.stringify(r.source)}`);
-    console.log(`  out: ${JSON.stringify(r.output)}`);
-    console.log(`  why: ${r.judge.reason}`);
-  }
-}
+const n = rows.length;
+const rate = (f) => `${rows.filter(f).length}/${n}`;
+console.log(label, "time", summary.time_total_s, "s, pipeline $", summary.cost_pipeline_usd, "judge $", summary.cost_judge_usd);
+for (const c of CHECKS) console.log(`  ${c.padEnd(18)} ${rate((r) => r.checks[c] !== false)}`);
+for (const j of ["accuracy", "fluency", "concise"]) console.log(`  judge_${j.padEnd(12)} ${rate((r) => r.judge[j] === "pass")}`);
+console.log("  glossary", JSON.stringify(glossary), "register", JSON.stringify(file.register));
