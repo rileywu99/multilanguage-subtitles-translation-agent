@@ -2,9 +2,122 @@
 
 Run on 2026-11-02 (PT) against the real pipeline in `src/lib` (no mocks, no demo replay). Every number comes from the JSON files in `eval/results/`.
 
-This file has two parts:
-- **Round 2 (top):** Riley's quality criteria. 40 rows, 3 runs, on the code with the header fix. Results are in `eval/results/v2/`.
-- **Round 1 (below):** the first 26-row eval and the header locale fix, with before and after numbers. Results are in `eval/results/*.json`.
+This file has three parts:
+- **Round 3 (top):** the fixes Riley approved after round 2, measured with the same 40 rows × 3 runs. "Before" is in `eval/results/v2/`, "after" is in `eval/results/v3/`.
+- **Round 2:** Riley's quality criteria and the first measurement against them.
+- **Round 1 (bottom):** the first 26-row eval and the header locale fix.
+
+## Before → after, every criterion (round 3)
+
+- 40 rows × 3 runs = 120 row-translations on each side. Same harness, same judge (Claude Opus 5.5).
+- "Before" = commit `0a52f5a`. "After" = commit `d594416`.
+- The "before" runs were **rescored offline** with the final `checks.mjs`, so both sides use identical code checks. Rescoring makes no API calls. Two changes are behind this:
+  - `numbers` and `units` now accept 「8 折」 for "20% off" and 「第三季」 for "Q3", which ends the false positives.
+  - `currency` now fails a doubled marker such as 「$19.99 美元」.
+- The round 2 table further down shows the raw numbers as first measured.
+
+| # | Criterion | Check | Type | Before | After | Remaining failure (after) |
+|---|---|---|---|---|---|---|
+| 1 | Concise wording | No added words or padding | judge | 75.0% (90/120) | **90.8%** (109/120) | 「請」 on plain imperatives, 「可供…使用」, 「自動」 |
+| 1 | | Length ratio inside file range | code | 99.1% (116/117) | **100%** (117/117) | None |
+| 1 | | Within `max_chars` | code | 100% | 100% | None |
+| 2 | Person names | Kept exactly as typed | code | 0/24 occurrences | **24/24** | None |
+| 2 | | Kept or glossary (round 2 definition) | code | 66.7% (12/18 rows) | **100%** (18/18) | None |
+| 2 | | Same in every row of a file | code | 18/18 | 18/18 | None |
+| 2 | | Same across the 3 runs, and acceptable | code | 1/5 names | **5/5** | None |
+| 3 | Proper nouns | Kept as-is or official zh-TW form | code | 84.3% (43/51), 8 misuses | **100%** (51/51), **0 misuses** | None |
+| 3 | | Same rendering in one file | code | 97.3% (72/74), 2 inconsistencies | **100%** (75/75), 0 | None |
+| 3 | | Same rendering across runs | code | 3 terms change | **0** | None |
+| 4 | Format | Placeholders / HTML / line breaks | code | 100% each | 100% each | None |
+| 4 | | Structure (rows, columns, pass-through, no empty cells) | code | 3/3 files | 3/3 files | None |
+| 4 | | Numbers preserved | code | 100% | 100% | None |
+| 4 | | Dates / times in Taiwan format | code | 9/9 / 3/3 | 9/9 / 3/3 | None |
+| 4 | | Currency (one marker, same figure) | code | 33.3% (2/6) | **100%** (6/6) | None |
+| 4 | | Units (kept, not doubled) | code | 85.7% (18/21) | **100%** (21/21) | None |
+| 4 | | Full-width punctuation | code | 100% | 100% | None |
+| 5 | Locale terms | No Mainland terms | code | 100% | 100% | None |
+| 5 | Register | One form of "you" per file | code | 87.0% of rows (40/46), 2/3 files | **100%** (48/48), **3/3 files** (all 您) | None |
+| 5 | Leftover English | No untranslated English | code | 96.7% (116/120) | **98.3%** (118/120) | 「Pro 方案」 (plan name kept; arguably correct) |
+| 5 | Meaning accuracy | Full meaning, right word sense | judge | 93.3% (112/120) | **96.7%** (116/120) | 「grace period on the invoice」 still awkward; 「信用卡號碼」 for "card number" |
+| 5 | Fluency | Natural Taiwan Mandarin | judge | 95.0% (114/120) | **98.3%** (118/120) | The same grace-period row |
+| 5+ | Spacing | Same spacing next to Latin/digits | code | 82.9% (63/76) | 89.3% (75/84) | 「8個字元」, 「75%時」 (not targeted by the fixes) |
+| | Speed | Time per row | measured | 775 ms (31.0 s / file) | **1,129 ms** (45.1 s / file) | Regression, see below |
+| | Cost | Pipeline cost per 100 rows | measured | $0.168 | **$0.210** | Regression, see below |
+
+### What changed in the product (commit `d594416`)
+
+1. **Names.**
+   - For zh targets, the glossary pass now lists every person name, not only recurring ones.
+   - Any Latin-script name, English or pinyin, is mapped to itself, so "Zhang Wei" stays "Zhang Wei".
+   - Every batch prompt says never to transliterate or guess characters.
+   - A caller-supplied `nameMap` overrides this. CJK-source names keep the old glossary rules: the change only applies when `isLatinScriptName` is true.
+2. **Proper nouns.**
+   - New config file `src/lib/localeConfig.ts` holds:
+     - a default do-not-translate list (brands and acronyms)
+     - official term maps for zh-TW and zh-CN (Google 試算表, Google 日曆, city names)
+     - the Mainland avoid-list
+     - the default register per locale
+   - Requests can extend all of it through `TranslationOptions` (the API route accepts an optional `options` field).
+   - The glossary pass also fixes one translation for each recurring ordinary term (for example account → 帳戶), and every batch prompt enforces it.
+3. **Register.** zh-TW and zh-CN default to 您, configurable through `options.register`. Every batch gets the same instruction.
+4. **Concision and format.** The batch prompt now says:
+   - Translate only what the source says, with no added 「請」, 「系統將於…進行」, 「功能」, 「方案」, 「自動」 or 「產品」 unless the source implies them.
+   - Write a dollar amount once.
+   - Keep unit symbols without repeating the unit in words.
+5. **Code checks with retry** (`cellProblems` in `localeConfig.ts`).
+   - After each batch, the code checks:
+     - names kept
+     - do-not-translate terms kept
+     - official terms used
+     - register
+     - avoid-list
+     - doubled currency
+     - doubled units
+   - Any failure re-runs the batch once, naming the failing rows and rules. The better attempt per row is kept, and a row is never blanked for one of these soft failures.
+   - Column headers also get an avoid-list check with one retry. This was the next step listed at the end of round 1.
+6. **What the eval passed in.** The eval passed the three made-up names in this test set (Smart Import, Workspace Pro, Lexingtonight) as the request's `doNotTranslate` list, the way a customer would. Everything else came from the defaults.
+
+### Did the retries fire?
+
+No. Across the 3 after runs there were 4 batch calls and 1 header call per run, with no retry logs. So the improvement comes from the prompt and glossary rules, and the code checks found nothing to correct. They are a safety net that this sample did not trigger.
+
+### Regressions
+
+1. **Slower: 775 → 1,129 ms per row.**
+   - The cause is the glossary pass. Before each batch runs, it now lists every name plus the recurring terms, and it runs alone.
+   - It went from 9 to 21 s (911 to 1,732 output tokens) up to 26 to 39 s (2,643 to 3,874 output tokens).
+   - The batch calls themselves got faster (13 to 19 s down to 8 to 10 s).
+   - Suggested next step, not applied: lower effort on the glossary call, or run it alongside the first batches.
+2. **More expensive: $0.168 → $0.210 per 100 rows (+25%).**
+   - Same cause: glossary output tokens.
+   - Batch costs were flat ($0.046 to $0.057 before, $0.041 to $0.049 after).
+3. **Header mistranslation seen once: 「鑰匙」 (a physical key) for the `key` column** (after, run 2).
+   - It contains no Mainland term, so the avoid-list check passes it, and round 2 and 3 do not judge headers.
+   - The header prompt did not change apart from the retry path, which did not fire. So this is most likely Haiku run-to-run noise, but it is a real output a user would see.
+   - Other header variants: 「型別」 for type (run 3), 「最大字數」 (run 2).
+
+### Round 3 limits
+- The same 40 rows that drove the fixes were used to measure them. Some of the gain may be fitting to this set; a fresh held-out set is the honest next test.
+- The judge has still not been compared with Riley's hand labels.
+- 3 runs per side.
+
+### Round 3 spend
+- Round 3 cost **$0.844**: pipeline $0.252, judge $0.593.
+- Rounds 1 to 3 together cost about **$2.77**, all from prepaid API credits.
+
+### Reproduce round 3
+```bash
+cd translation-agent
+env -u NODE_OPTIONS node_modules/.bin/tsc -p eval/tsconfig.eval.json
+for i in 1 2 3; do EVAL_OUT=v3 env -u NODE_OPTIONS node --env-file-if-exists=.env --env-file-if-exists=.env.local eval/run_eval.mjs v3_run$i; done
+env -u NODE_OPTIONS node eval/rescore.mjs eval/results/v2/v2_run*.json   # apply final checks to the before runs
+env -u NODE_OPTIONS node eval/aggregate.mjs eval/results/v2/v2_run1.json eval/results/v2/v2_run2.json eval/results/v2/v2_run3.json
+env -u NODE_OPTIONS node eval/aggregate.mjs eval/results/v3/v3_run1.json eval/results/v3/v3_run2.json eval/results/v3/v3_run3.json
+```
+
+---
+
+# Round 2: Riley's quality criteria (first measurement)
 
 ## Criteria table (round 2: 40 rows × 3 runs = 120 row-translations)
 

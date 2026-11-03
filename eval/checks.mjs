@@ -99,7 +99,14 @@ export function codeChecks(row, glossary) {
   c.line_breaks = (src.match(/\n/g) ?? []).length === (out.match(/\n/g) ?? []).length;
   c.translated = out !== src;
 
-  c.numbers = subsetMultiset(src.match(NUMBER) ?? [], out.match(NUMBER) ?? []);
+  // Accepted zh-TW rewrites of a number: "20% off" -> 「8 折」, "Q3" -> 「第三季」.
+  const srcNums = (src.match(NUMBER) ?? []).filter((n) => {
+    const pct = new RegExp(`\\b${n}%`).test(src) && /(off|save|discount)/i.test(src);
+    if (pct && new RegExp(`${(100 - Number(n)) / 10}\\s*折`).test(out)) return false;
+    if (new RegExp(`\\bQ${n}\\b`).test(src) && new RegExp(`第[一二三四]季`).test(out)) return false;
+    return true;
+  });
+  c.numbers = subsetMultiset(srcNums, out.match(NUMBER) ?? []);
 
   // Dates: zh-TW writes 2026 年 3 月 3 日 / 3 月 3 日, never an English month name.
   if (MONTH.test(src)) {
@@ -124,7 +131,7 @@ export function codeChecks(row, glossary) {
   // Units: unit symbols kept, and not doubled with a Chinese unit word (攝氏0°C).
   const units = ["°C", "°F", "GB", "%"].filter((u) => src.includes(u));
   if (units.length) {
-    c.units = units.every((u) => out.includes(u)) && !(/攝氏/.test(out) && out.includes("°C")) && !(/華氏/.test(out) && out.includes("°F"));
+    c.units = units.every((u) => out.includes(u) || (u === "%" && /折/.test(out) && /(off|save|discount)/i.test(src))) && !(/攝氏/.test(out) && out.includes("°C")) && !(/華氏/.test(out) && out.includes("°F"));
   } else c.units = null;
 
   // Punctuation: after/inside Chinese text use full-width ，。！？：；（）.

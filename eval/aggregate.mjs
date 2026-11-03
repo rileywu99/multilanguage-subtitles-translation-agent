@@ -30,7 +30,7 @@ const structure = runs.map((d) => d.summary.shape);
 const names = NAMES.map((name) => {
   const perRun = runs.map((d) => {
     const vals = d.rows.flatMap((r) => (r.name_renderings?.[name] ? [r.name_renderings[name]] : []));
-    return { renderings: [...new Set(vals)], occurrences: vals.length, in_glossary: d.summary.glossary[name] ?? null };
+    return { renderings: [...new Set(vals)], occurrences: vals.length, verbatim: vals.filter((v) => v === "verbatim").length, in_glossary: d.summary.glossary[name] ?? null };
   });
   const flat = perRun.flatMap((p) => p.renderings);
   return {
@@ -38,6 +38,7 @@ const names = NAMES.map((name) => {
     verbatim_or_glossary: perRun.every((p) => p.renderings.every((x) => x !== "changed")),
     same_within_each_run: perRun.every((p) => p.renderings.length <= 1),
     same_across_runs: new Set(flat).size === 1,
+    verbatim_occurrences: `${perRun.reduce((a, p) => a + p.verbatim, 0)}/${perRun.reduce((a, p) => a + p.occurrences, 0)}`,
   };
 });
 
@@ -57,9 +58,9 @@ const perRun = runs.map((d, i) => ({
 const total = perRun.reduce((s, r) => s + r.cost_pipeline + r.cost_judge, 0);
 
 const out = { files, rates, structure, names, misuse, inconsistentInFile, crossRunTerms, perRun, total_cost_usd: +total.toFixed(4) };
-writeFileSync(new URL("./results/v2/aggregate.json", import.meta.url), JSON.stringify(out, null, 2));
+import("node:path").then(({ dirname, join }) => writeFileSync(join(dirname(files[0]), "aggregate.json"), JSON.stringify(out, null, 2)));
 for (const r of Object.values(rates)) console.log(`${r.check.padEnd(18)} ${r.type.padEnd(5)} ${String(r.pass).padStart(3)}/${r.n} ${r.pct}%  ${r.failing_keys.join(", ")}`);
-console.log("\nNAMES"); names.forEach((n) => console.log(n.name, JSON.stringify(n.perRun.map((p) => p.renderings)), n.verbatim_or_glossary, n.same_within_each_run, n.same_across_runs));
+console.log("\nNAMES"); names.forEach((n) => console.log(n.name, JSON.stringify(n.perRun.map((p) => p.renderings)), n.verbatim_or_glossary, n.same_within_each_run, n.same_across_runs, "verbatim", n.verbatim_occurrences));
 console.log("\nMISUSE", misuse.length, JSON.stringify(misuse.map((m) => `r${m.run} ${m.key} ${m.term} ${m.v}`)));
 console.log("IN-FILE INCONSISTENT", JSON.stringify(inconsistentInFile));
 console.log("CROSS-RUN", JSON.stringify(crossRunTerms));

@@ -48,13 +48,10 @@
     "numbers": {
       "check": "numbers",
       "type": "code",
-      "pass": 115,
+      "pass": 120,
       "n": 120,
-      "pct": 95.8,
-      "failing_keys": [
-        "banner.offer",
-        "name.share"
-      ]
+      "pct": 100,
+      "failing_keys": []
     },
     "dates": {
       "check": "dates",
@@ -86,11 +83,10 @@
     "units": {
       "check": "units",
       "type": "code",
-      "pass": 15,
+      "pass": 18,
       "n": 21,
-      "pct": 71.4,
+      "pct": 85.7,
       "failing_keys": [
-        "banner.offer",
         "help.temperature"
       ]
     },
@@ -328,6 +324,7 @@
             "glossary:陳威爾"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "陳威爾"
         },
         {
@@ -335,6 +332,7 @@
             "glossary:陳威廉"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "陳威廉"
         },
         {
@@ -342,12 +340,14 @@
             "glossary:威爾·陳"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "威爾·陳"
         }
       ],
       "verbatim_or_glossary": true,
       "same_within_each_run": true,
-      "same_across_runs": false
+      "same_across_runs": false,
+      "verbatim_occurrences": "0/6"
     },
     {
       "name": "Grace Lin",
@@ -357,6 +357,7 @@
             "glossary:林格雷絲"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "林格雷絲"
         },
         {
@@ -364,6 +365,7 @@
             "glossary:林格蕾絲"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "林格蕾絲"
         },
         {
@@ -371,12 +373,14 @@
             "glossary:葛瑞絲·林"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "葛瑞絲·林"
         }
       ],
       "verbatim_or_glossary": true,
       "same_within_each_run": true,
-      "same_across_runs": false
+      "same_across_runs": false,
+      "verbatim_occurrences": "0/6"
     },
     {
       "name": "Zhang Wei",
@@ -386,6 +390,7 @@
             "changed"
           ],
           "occurrences": 1,
+          "verbatim": 0,
           "in_glossary": null
         },
         {
@@ -393,6 +398,7 @@
             "changed"
           ],
           "occurrences": 1,
+          "verbatim": 0,
           "in_glossary": null
         },
         {
@@ -400,12 +406,14 @@
             "changed"
           ],
           "occurrences": 1,
+          "verbatim": 0,
           "in_glossary": null
         }
       ],
       "verbatim_or_glossary": false,
       "same_within_each_run": true,
-      "same_across_runs": true
+      "same_across_runs": true,
+      "verbatim_occurrences": "0/3"
     },
     {
       "name": "Liu Yang",
@@ -415,6 +423,7 @@
             "changed"
           ],
           "occurrences": 1,
+          "verbatim": 0,
           "in_glossary": null
         },
         {
@@ -422,6 +431,7 @@
             "changed"
           ],
           "occurrences": 1,
+          "verbatim": 0,
           "in_glossary": null
         },
         {
@@ -429,12 +439,14 @@
             "changed"
           ],
           "occurrences": 1,
+          "verbatim": 0,
           "in_glossary": null
         }
       ],
       "verbatim_or_glossary": false,
       "same_within_each_run": true,
-      "same_across_runs": true
+      "same_across_runs": true,
+      "verbatim_occurrences": "0/3"
     },
     {
       "name": "Michael Johnson",
@@ -444,6 +456,7 @@
             "glossary:麥可·強森"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "麥可·強森"
         },
         {
@@ -451,6 +464,7 @@
             "glossary:麥可·強森"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "麥可·強森"
         },
         {
@@ -458,12 +472,14 @@
             "glossary:麥可·強森"
           ],
           "occurrences": 2,
+          "verbatim": 0,
           "in_glossary": "麥可·強森"
         }
       ],
       "verbatim_or_glossary": true,
       "same_within_each_run": true,
-      "same_across_runs": true
+      "same_across_runs": true,
+      "verbatim_occurrences": "0/6"
     }
   ],
   "misuse": [

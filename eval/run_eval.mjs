@@ -36,6 +36,10 @@ const PRICES = {
 };
 const JUDGE_MODEL = "claude-opus-5-5";
 const TARGET = { code: "zh-TW", name: "Chinese (Traditional)" };
+// The eval set's own (fictional) product and brand names, supplied the way a
+// customer would pass their do-not-translate list. Harness v3+; older
+// pipeline builds ignore the extra argument.
+const OPTIONS = { doNotTranslate: ["Smart Import", "Workspace Pro", "Lexingtonight"] };
 
 // ---------- usage metering ----------
 const usage = [];
@@ -107,16 +111,20 @@ const table = csvLib.parseCsv(readFileSync(join(here, "dataset.csv"), "utf8"));
 const t0 = performance.now();
 const columns = csvLib.detectTranslatableColumns(table);
 const context = await analyzeContext(table, columns);
-const result = await translateTable(table, columns, [TARGET], context);
+const result = await translateTable(table, columns, [TARGET], context, OPTIONS);
 const pipelineMs = Math.round(performance.now() - t0);
 const outCsv = csvLib.toCsv(result);
 const reparsed = csvLib.parseCsv(outCsv);
 const translatedHeader = result.headers[table.headers.length + table.headers.indexOf("text")];
 
+// Raw glossary reply as the model gave it (before the pipeline's own post-processing).
 let glossary = {};
+let glossaryTerms = {};
 try {
-  const parsed = JSON.parse(glossaryRaw.trim().replace(/^```(?:json)?\s*|\s*```$/g, ""));
-  for (const e of parsed) for (const f of e.surfaceForms ?? []) glossary[f] = e.translation;
+  const raw = JSON.parse(glossaryRaw.trim().replace(/^```(?:json)?\s*|\s*```$/g, ""));
+  const names = Array.isArray(raw) ? raw : raw.names ?? [];
+  for (const e of names) for (const f of e.surfaceForms ?? []) glossary[f] = e.translation;
+  for (const t of (Array.isArray(raw) ? [] : raw.terms ?? [])) glossaryTerms[t.source] = t.translation;
 } catch { glossary = { _unparsed: glossaryRaw }; }
 
 const shape = {
@@ -149,7 +157,7 @@ const judgeUsage = usage.filter((u) => u.stage === "judge");
 const summary = {
   label, run_at: new Date().toISOString(), harness: "v2",
   translation_model: TRANSLATION_MODEL, utility_model: UTILITY_MODEL, judge_model: JUDGE_MODEL,
-  rows: rows.length, shape, context, glossary, file,
+  rows: rows.length, shape, context, glossary, glossary_terms: glossaryTerms, options: OPTIONS, file,
   time_total_s: pipelineMs / 1000, time_per_row_ms: Math.round(pipelineMs / rows.length),
   tokens: { input: pipelineUsage.reduce((s, u) => s + u.input, 0), output: pipelineUsage.reduce((s, u) => s + u.output, 0) },
   cost_pipeline_usd: +cost(pipelineUsage).toFixed(5),
@@ -157,9 +165,10 @@ const summary = {
   cost_judge_usd: +cost(judgeUsage).toFixed(5),
   usage_by_stage: pipelineUsage,
 };
-mkdirSync(join(here, "results", "v2"), { recursive: true });
-writeFileSync(join(here, "results", "v2", `${label}.json`), JSON.stringify({ summary, rows }, null, 2));
-writeFileSync(join(here, "results", "v2", `${label}.output.csv`), outCsv);
+const outDir = process.env.EVAL_OUT ?? "v2";
+mkdirSync(join(here, "results", outDir), { recursive: true });
+writeFileSync(join(here, "results", outDir, `${label}.json`), JSON.stringify({ summary, rows }, null, 2));
+writeFileSync(join(here, "results", outDir, `${label}.output.csv`), outCsv);
 
 const n = rows.length;
 const rate = (f) => `${rows.filter(f).length}/${n}`;
