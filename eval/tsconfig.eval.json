@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": false,
+    "outDir": ".build",
+    "rootDir": "../src/lib"
+  },
+  "include": ["../src/lib/anthropic.ts", "../src/lib/csv.ts", "../src/lib/context.ts", "../src/lib/glossary.ts", "../src/lib/languages.ts", "../src/lib/translate.ts"]
+}

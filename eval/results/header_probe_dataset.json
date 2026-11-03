@@ -1,0 +1,64 @@
+{
+  "reps": 30,
+  "headers": [
+    "key",
+    "type",
+    "text",
+    "max_chars"
+  ],
+  "context": {
+    "domain": "technical documentation",
+    "tone": "formal/instructional",
+    "notes": "Contains UI strings, system requirements, and templated messages with variable placeholders (%1$s, %2$s) that must be preserved."
+  },
+  "report": {
+    "v0": {
+      "labels": 120,
+      "mainland_labels": 5,
+      "mainland_rate_pct": 4.2,
+      "fell_back_or_kept_english": 0,
+      "cost_usd": 0.01439,
+      "hits": [
+        "max_chars -> 最大字符數 (字符)",
+        "text -> 文本 (文本)",
+        "text -> 文本 (文本)",
+        "text -> 文本 (文本)",
+        "max_chars -> 最大字符數 (字符)"
+      ],
+      "sample": [
+        "鍵",
+        "類型",
+        "文字",
+        "最大字元數"
+      ]
+    },
+    "v1": {
+      "labels": 120,
+      "mainland_labels": 0,
+      "mainland_rate_pct": 0,
+      "fell_back_or_kept_english": 0,
+      "cost_usd": 0.01676,
+      "hits": [],
+      "sample": [
+        "鍵名",
+        "類型",
+        "文字",
+        "最大字元數"
+      ]
+    },
+    "v2": {
+      "labels": 120,
+      "mainland_labels": 0,
+      "mainland_rate_pct": 0,
+      "fell_back_or_kept_english": 0,
+      "cost_usd": 0.05576,
+      "hits": [],
+      "sample": [
+        "鍵值",
+        "類型",
+        "文字",
+        "最大字元數"
+      ]
+    }
+  }
+}

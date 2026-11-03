@@ -1,0 +1,28 @@
+key,type,text,max_chars
+btn.save,button,Save changes,20
+btn.cancel,button,Cancel,12
+nav.settings,menu,Account settings,24
+toast.welcome,toast,"Welcome back, {name}!",40
+toast.messages,toast,You have %d new messages,40
+toast.upload,toast,%s was uploaded successfully.,60
+cart.count,label,{{count}} items in your cart,40
+legal.signup,legal,"By signing up, you agree to our <a href=""/terms"">Terms of Service</a> and <a href=""/privacy"">Privacy Policy</a>.",200
+banner.offer,banner,<strong>Limited offer:</strong> save 20% on annual plans until <em>Dec 31</em>.,120
+pricing.pro,pricing,"Pro plan: $19.99/month, billed annually at $199.",80
+pricing.storage,pricing,Includes 50 GB of storage and up to 5 team members.,80
+notice.maintenance,notice,"Scheduled maintenance on March 3, 2026 from 9:30 PM to 11:00 PM PT.",120
+help.temperature,help,Keep the device between 0°C and 35°C (32°F to 95°F).,80
+integration.notion,integration,Connect your Notion workspace to sync pages automatically.,100
+integration.stripe,integration,Payments are processed securely by Stripe. We never store your card number.,120
+marketing.lexingtonight,marketing,Follow Lexingtonight for daily life tips and diary posts.,100
+integration.slack,integration,Send a Slack alert when a Workflow fails in n8n.,100
+help.iphone,help,"Open the app on your iPhone and tap Share, then Add to Home Screen.",120
+onboarding.intro,onboarding,"Start by importing a CSV file. We will detect which columns need translation, keep IDs and prices untouched, and return a localized copy you can download in under a minute.",300
+legal.privacy,legal,We only use your data to provide the service. You can export or delete your account at any time from Settings > Privacy.,200
+email.shipped,email,"Hi {first_name}, your order #{order_id} has shipped and should arrive by {date}.",160
+email.welcome,email,"Thanks for joining!
+Reply to this email if you have any questions.",160
+error.upload,error,Upload failed at 75%. Please check your connection and try again.,120
+tooltip.password,tooltip,Password must be at least 8 characters.<br>Use letters and numbers.,120
+toast.invite,toast,%1$s invited you to join %2$s.,80
+error.404,error,Error 404: Page not found,60

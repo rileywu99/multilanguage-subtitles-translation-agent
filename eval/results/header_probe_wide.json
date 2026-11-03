@@ -1,0 +1,101 @@
+{
+  "reps": 10,
+  "headers": [
+    "key",
+    "type",
+    "text",
+    "max_chars",
+    "description",
+    "file_name",
+    "user_settings",
+    "network_status",
+    "default_value",
+    "video_url",
+    "link",
+    "login_count",
+    "account_balance",
+    "message"
+  ],
+  "context": {
+    "domain": "software UI localization",
+    "tone": "neutral",
+    "notes": ""
+  },
+  "report": {
+    "v0": {
+      "labels": 140,
+      "mainland_labels": 2,
+      "mainland_rate_pct": 1.4,
+      "fell_back_or_kept_english": 0,
+      "cost_usd": 0.01277,
+      "hits": [
+        "max_chars -> 最大字符數 (字符)",
+        "max_chars -> 最大字符 (字符)"
+      ],
+      "sample": [
+        "鍵",
+        "類型",
+        "文字",
+        "最大字符數",
+        "描述",
+        "檔案名稱",
+        "使用者設定",
+        "網路狀態",
+        "預設值",
+        "影片網址",
+        "連結",
+        "登入次數",
+        "帳戶餘額",
+        "訊息"
+      ]
+    },
+    "v1": {
+      "labels": 140,
+      "mainland_labels": 0,
+      "mainland_rate_pct": 0,
+      "fell_back_or_kept_english": 0,
+      "cost_usd": 0.01334,
+      "hits": [],
+      "sample": [
+        "鍵值",
+        "類型",
+        "文字",
+        "最大字元數",
+        "描述",
+        "檔案名稱",
+        "使用者設定",
+        "網路狀態",
+        "預設值",
+        "影片網址",
+        "連結",
+        "登入次數",
+        "帳戶餘額",
+        "訊息"
+      ]
+    },
+    "v2": {
+      "labels": 140,
+      "mainland_labels": 0,
+      "mainland_rate_pct": 0,
+      "fell_back_or_kept_english": 0,
+      "cost_usd": 0.03675,
+      "hits": [],
+      "sample": [
+        "鍵值",
+        "類型",
+        "文字",
+        "最大字元數",
+        "說明",
+        "檔案名稱",
+        "使用者設定",
+        "網路狀態",
+        "預設值",
+        "影片網址",
+        "連結",
+        "登入次數",
+        "帳戶餘額",
+        "訊息"
+      ]
+    }
+  }
+}

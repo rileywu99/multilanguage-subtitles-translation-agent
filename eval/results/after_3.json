@@ -1,0 +1,712 @@
+{
+  "summary": {
+    "label": "after_3",
+    "run_at": "2026-11-03T04:13:56.883Z",
+    "translation_model": "claude-sonnet-5",
+    "utility_model": "claude-haiku-4-5-20251001",
+    "judge_model": "claude-opus-5-5",
+    "rows": 26,
+    "shape": {
+      "input_rows": 26,
+      "output_rows": 26,
+      "rows_match": true,
+      "columns_match": true,
+      "passthrough_intact": true,
+      "detected_columns": [
+        "text"
+      ],
+      "flagged_count": 0
+    },
+    "code_pass_rate": 100,
+    "code_check_pass_rates": {
+      "non_empty": 100,
+      "placeholders": 100,
+      "html": 100,
+      "numbers": 100,
+      "brands": 100,
+      "line_breaks": 100,
+      "locale_terms": 100,
+      "translated": 100
+    },
+    "judge_pass_rate": 84.6,
+    "judge_accuracy_rate": 84.6,
+    "judge_fluency_rate": 92.3,
+    "header_pass": "3/4",
+    "header_locale_pass": "4/4",
+    "headers": [
+      {
+        "source": "key",
+        "output": "鍵名",
+        "mainland_terms": [],
+        "judge": {
+          "accuracy": "pass",
+          "fluency": "pass",
+          "reason": "「鍵名」準確表達 CSV 欄位標題中 key 的意思，作為欄位名稱簡潔自然，也符合台灣技術用語習慣。"
+        },
+        "pass": true
+      },
+      {
+        "source": "type",
+        "output": "類型",
+        "mainland_terms": [],
+        "judge": {
+          "accuracy": "pass",
+          "fluency": "pass",
+          "reason": "「類型」準確對應 CSV 欄位標題 \"type\"，是台灣常用的自然用語。"
+        },
+        "pass": true
+      },
+      {
+        "source": "text",
+        "output": "文字內容",
+        "mainland_terms": [],
+        "judge": {
+          "accuracy": "pass",
+          "fluency": "pass",
+          "reason": "「文字內容」準確表達 CSV 欄位標題「text」的意思，用語自然，符合台灣用法。"
+        },
+        "pass": true
+      },
+      {
+        "source": "max_chars",
+        "output": "最大字元數",
+        "mainland_terms": [],
+        "judge": {
+          "accuracy": "fail",
+          "fluency": "pass",
+          "reason": "「max_chars」looks like a machine-read CSV column key that should probably stay untranslated, though「最大字元數」would be an accurate, natural Taiwan rendering if it is only a display label."
+        },
+        "pass": false
+      }
+    ],
+    "both_layers_pass_rate": 84.6,
+    "time_total_s": 26.93,
+    "time_per_row_ms": 1036,
+    "api_calls": 6,
+    "tokens": {
+      "input": 6534,
+      "output": 2967
+    },
+    "cost_pipeline_usd": 0.04152,
+    "cost_per_100_rows_usd": 0.1597,
+    "cost_judge_usd": 0.1302,
+    "usage_by_stage": [
+      {
+        "stage": "context",
+        "model": "claude-haiku-4-5-20251001",
+        "input": 292,
+        "output": 69,
+        "ms": 1532
+      },
+      {
+        "stage": "headers",
+        "model": "claude-haiku-4-5-20251001",
+        "input": 277,
+        "output": 61,
+        "ms": 1003
+      },
+      {
+        "stage": "glossary",
+        "model": "claude-sonnet-5",
+        "input": 1071,
+        "output": 4,
+        "ms": 1208
+      },
+      {
+        "stage": "translate",
+        "model": "claude-sonnet-5",
+        "input": 1388,
+        "output": 60,
+        "ms": 1234
+      },
+      {
+        "stage": "translate",
+        "model": "claude-sonnet-5",
+        "input": 1708,
+        "output": 435,
+        "ms": 4988
+      },
+      {
+        "stage": "translate",
+        "model": "claude-sonnet-5",
+        "input": 1798,
+        "output": 2338,
+        "ms": 24184
+      }
+    ]
+  },
+  "rows": [
+    {
+      "key": "btn.save",
+      "source": "Save changes",
+      "output": "儲存變更",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Accurate and natural; 儲存變更 is the standard Taiwan UI phrasing for this string."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "btn.cancel",
+      "source": "Cancel",
+      "output": "取消",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "「取消」 is the standard, natural Taiwan UI term for Cancel."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "nav.settings",
+      "source": "Account settings",
+      "output": "帳戶設定",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Accurate, natural Taiwan wording using standard terms 帳戶 and 設定."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "toast.welcome",
+      "source": "Welcome back, {name}!",
+      "output": "歡迎回來，{name}！",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The translation keeps the full meaning and the {name} placeholder, and reads naturally in Taiwan Mandarin with full-width punctuation."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "toast.messages",
+      "source": "You have %d new messages",
+      "output": "你有 %d 則新訊息",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Meaning is fully preserved and the placeholder is kept, and 則 and 訊息 are natural Taiwan usage."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "toast.upload",
+      "source": "%s was uploaded successfully.",
+      "output": "%s 已成功上傳。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The translation keeps the full meaning and the %s placeholder, and reads naturally in Taiwan Mandarin."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "cart.count",
+      "source": "{{count}} items in your cart",
+      "output": "購物車內有 {{count}} 件商品",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The meaning is fully preserved with the placeholder intact, and the phrasing is natural Taiwan e-commerce copy."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "legal.signup",
+      "source": "By signing up, you agree to our <a href=\"/terms\">Terms of Service</a> and <a href=\"/privacy\">Privacy Policy</a>.",
+      "output": "註冊即表示你同意我們的<a href=\"/terms\">服務條款</a>與<a href=\"/privacy\">隱私權政策</a>。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Meaning, links and tags are fully preserved, and the wording is natural Taiwan usage (註冊、服務條款、隱私權政策)."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "banner.offer",
+      "source": "<strong>Limited offer:</strong> save 20% on annual plans until <em>Dec 31</em>.",
+      "output": "<strong>限時優惠：</strong>年繳方案現省 20%，優惠至<em>12 月 31 日</em>止。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Meaning, tags and numbers are fully preserved, and the phrasing reads as natural Taiwan promotional copy."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "pricing.pro",
+      "source": "Pro plan: $19.99/month, billed annually at $199.",
+      "output": "專業方案：每月 $19.99，採年繳方式收費 $199。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The meaning and all amounts are kept, and the wording is natural enough, though 「年繳 $199」 would read a bit more smoothly."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "pricing.storage",
+      "source": "Includes 50 GB of storage and up to 5 team members.",
+      "output": "包含 50 GB 儲存空間，最多可供 5 位團隊成員使用。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Storage amount and member limit are both conveyed accurately, in natural Taiwan Mandarin."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "notice.maintenance",
+      "source": "Scheduled maintenance on March 3, 2026 from 9:30 PM to 11:00 PM PT.",
+      "output": "系統將於 2026 年 3 月 3 日晚上 9:30 至 11:00（PT）進行例行維護。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "fail",
+        "fluency": "pass",
+        "reason": "'Scheduled' (planned) is rendered as 例行 (routine/recurring), which shifts the meaning; 預定維護 or 排定維護 would be accurate, while the date, times and PT are correct and the phrasing is natural."
+      },
+      "code_pass": true,
+      "judge_pass": false
+    },
+    {
+      "key": "help.temperature",
+      "source": "Keep the device between 0°C and 35°C (32°F to 95°F).",
+      "output": "請將裝置保持在攝氏0°C至35°C（華氏32°F至95°F）之間使用。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "fail",
+        "fluency": "pass",
+        "reason": "The translation adds 「使用」, narrowing the meaning to operating conditions only, though the source simply says to keep the device within this temperature range; the redundant 攝氏/°C phrasing is a minor style issue."
+      },
+      "code_pass": true,
+      "judge_pass": false
+    },
+    {
+      "key": "integration.notion",
+      "source": "Connect your Notion workspace to sync pages automatically.",
+      "output": "連接你的 Notion 工作區，就能自動同步頁面。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The translation keeps the full meaning, leaves the brand name intact, and reads naturally in Taiwan Mandarin."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "integration.stripe",
+      "source": "Payments are processed securely by Stripe. We never store your card number.",
+      "output": "付款由 Stripe 安全處理，我們不會儲存你的卡號。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The translation fully conveys both sentences, keeps the brand name, and reads naturally in Taiwan Mandarin."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "marketing.lexingtonight",
+      "source": "Follow Lexingtonight for daily life tips and diary posts.",
+      "output": "追蹤 Lexingtonight，掌握每日生活小技巧與日記文章。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The translation keeps the full meaning, leaves the brand name intact, and reads naturally with Taiwan usage such as 追蹤."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "integration.slack",
+      "source": "Send a Slack alert when a Workflow fails in n8n.",
+      "output": "當 n8n 中的 Workflow 執行失敗時，發送 Slack 通知。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The full meaning is kept: leaving 'Workflow' in English as an n8n product term is acceptable, and the phrasing reads naturally in Taiwan Mandarin."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "help.iphone",
+      "source": "Open the app on your iPhone and tap Share, then Add to Home Screen.",
+      "output": "在 iPhone 上開啟 App，點一下「Share」，然後選擇「Add to Home Screen」。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "fail",
+        "fluency": "fail",
+        "reason": "The iOS labels \"Share\" and \"Add to Home Screen\" are left in English; they are not placeholders or brand names and should be 「分享」 and 「加入主畫面」 to match the zh-TW iPhone interface."
+      },
+      "code_pass": true,
+      "judge_pass": false
+    },
+    {
+      "key": "onboarding.intro",
+      "source": "Start by importing a CSV file. We will detect which columns need translation, keep IDs and prices untouched, and return a localized copy you can download in under a minute.",
+      "output": "先匯入一個 CSV 檔案，我們會自動偵測哪些欄位需要翻譯，保留 ID 和價格不變，並在一分鐘內提供可下載的在地化版本。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The full meaning is kept (自動 is implied by context), and Taiwan terms like 檔案, 欄位, 偵測 and 在地化 read naturally."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "legal.privacy",
+      "source": "We only use your data to provide the service. You can export or delete your account at any time from Settings > Privacy.",
+      "output": "我們只會將你的資料用於提供服務。你可以隨時從 Settings > Privacy 匯出或刪除你的帳號。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "fail",
+        "fluency": "fail",
+        "reason": "The menu path 'Settings > Privacy' is left in English instead of being localized (e.g., 設定 > 隱私權), so it won't match the Chinese UI and reads unnaturally."
+      },
+      "code_pass": true,
+      "judge_pass": false
+    },
+    {
+      "key": "email.shipped",
+      "source": "Hi {first_name}, your order #{order_id} has shipped and should arrive by {date}.",
+      "output": "嗨 {first_name}，你的訂單 #{order_id} 已出貨，預計 {date} 前送達。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Full meaning and placeholders are preserved, and the phrasing (出貨, 預計…前送達) is natural Taiwan usage."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "email.welcome",
+      "source": "Thanks for joining!\nReply to this email if you have any questions.",
+      "output": "感謝你的加入！\n如果有任何問題，歡迎直接回覆這封信。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Meaning fully preserved and phrasing is natural Taiwan Mandarin; '歡迎直接' is an acceptable idiomatic softening."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "error.upload",
+      "source": "Upload failed at 75%. Please check your connection and try again.",
+      "output": "上傳到75%時失敗了，請檢查你的網路連線後再試一次。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The full meaning, including the 75% figure, is kept, and the natural Taiwan wording uses 網路連線."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "tooltip.password",
+      "source": "Password must be at least 8 characters.<br>Use letters and numbers.",
+      "output": "密碼至少需要8個字元。<br>請使用英文字母和數字。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "Meaning, the <br> tag and the number are preserved; 字元 is the correct Taiwan term, and 英文字母 is a natural rendering of 'letters'."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "toast.invite",
+      "source": "%1$s invited you to join %2$s.",
+      "output": "%1$s 邀請你加入 %2$s。",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The translation keeps the full meaning and both placeholders, and it reads naturally in Taiwan Mandarin."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    },
+    {
+      "key": "error.404",
+      "source": "Error 404: Page not found",
+      "output": "錯誤 404：找不到頁面",
+      "checks": {
+        "non_empty": true,
+        "placeholders": true,
+        "html": true,
+        "numbers": true,
+        "brands": true,
+        "line_breaks": true,
+        "locale_terms": true,
+        "translated": true
+      },
+      "judge": {
+        "accuracy": "pass",
+        "fluency": "pass",
+        "reason": "The translation fully conveys the meaning, keeps the number intact, and uses natural Taiwan phrasing."
+      },
+      "code_pass": true,
+      "judge_pass": true
+    }
+  ]
+}

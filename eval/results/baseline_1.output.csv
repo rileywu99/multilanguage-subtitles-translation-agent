@@ -1,0 +1,29 @@
+key,type,text,max_chars,鍵,類型,文字,最大字符數
+btn.save,button,Save changes,20,btn.save,button,儲存變更,20
+btn.cancel,button,Cancel,12,btn.cancel,button,取消,12
+nav.settings,menu,Account settings,24,nav.settings,menu,帳號設定,24
+toast.welcome,toast,"Welcome back, {name}!",40,toast.welcome,toast,歡迎回來，{name}！,40
+toast.messages,toast,You have %d new messages,40,toast.messages,toast,你有 %d 則新訊息,40
+toast.upload,toast,%s was uploaded successfully.,60,toast.upload,toast,%s 上傳成功。,60
+cart.count,label,{{count}} items in your cart,40,cart.count,label,購物車中有 {{count}} 項商品,40
+legal.signup,legal,"By signing up, you agree to our <a href=""/terms"">Terms of Service</a> and <a href=""/privacy"">Privacy Policy</a>.",200,legal.signup,legal,"註冊即表示你同意我們的<a href=""/terms"">服務條款</a>和<a href=""/privacy"">隱私權政策</a>。",200
+banner.offer,banner,<strong>Limited offer:</strong> save 20% on annual plans until <em>Dec 31</em>.,120,banner.offer,banner,<strong>限時優惠：</strong>年繳方案現省 20%，優惠至 <em>12 月 31 日</em>為止。,120
+pricing.pro,pricing,"Pro plan: $19.99/month, billed annually at $199.",80,pricing.pro,pricing,專業方案：每月 $19.99，年繳總計 $199。,80
+pricing.storage,pricing,Includes 50 GB of storage and up to 5 team members.,80,pricing.storage,pricing,包含 50 GB 儲存空間，最多可供 5 位團隊成員使用。,80
+notice.maintenance,notice,"Scheduled maintenance on March 3, 2026 from 9:30 PM to 11:00 PM PT.",120,notice.maintenance,notice,系統將於 2026 年 3 月 3 日晚上 9:30 至 11:00（太平洋時間）進行例行維護。,120
+help.temperature,help,Keep the device between 0°C and 35°C (32°F to 95°F).,80,help.temperature,help,請將裝置保持在 0°C 至 35°C（32°F 至 95°F）之間。,80
+integration.notion,integration,Connect your Notion workspace to sync pages automatically.,100,integration.notion,integration,連接你的 Notion 工作區，自動同步頁面。,100
+integration.stripe,integration,Payments are processed securely by Stripe. We never store your card number.,120,integration.stripe,integration,付款由 Stripe 安全處理，我們不會儲存你的卡號。,120
+marketing.lexingtonight,marketing,Follow Lexingtonight for daily life tips and diary posts.,100,marketing.lexingtonight,marketing,追蹤 Lexingtonight，掌握日常生活小技巧與日記分享。,100
+integration.slack,integration,Send a Slack alert when a Workflow fails in n8n.,100,integration.slack,integration,當 n8n 的工作流程失敗時，發送 Slack 通知。,100
+help.iphone,help,"Open the app on your iPhone and tap Share, then Add to Home Screen.",120,help.iphone,help,在你的 iPhone 上打開 App，點選「分享」，再選「加入主畫面」。,120
+onboarding.intro,onboarding,"Start by importing a CSV file. We will detect which columns need translation, keep IDs and prices untouched, and return a localized copy you can download in under a minute.",300,onboarding.intro,onboarding,先匯入 CSV 檔案，我們會自動偵測哪些欄位需要翻譯，保留 ID 和價格不變，並在一分鐘內提供可下載的在地化版本。,300
+legal.privacy,legal,We only use your data to provide the service. You can export or delete your account at any time from Settings > Privacy.,200,legal.privacy,legal,我們僅將你的資料用於提供服務。你隨時可以從「設定 > 隱私權」匯出或刪除帳號。,200
+email.shipped,email,"Hi {first_name}, your order #{order_id} has shipped and should arrive by {date}.",160,email.shipped,email,嗨 {first_name}，你的訂單 #{order_id} 已出貨，預計 {date} 前送達。,160
+email.welcome,email,"Thanks for joining!
+Reply to this email if you have any questions.",160,email.welcome,email,"感謝你的加入！
+如有任何問題，歡迎直接回覆這封信。",160
+error.upload,error,Upload failed at 75%. Please check your connection and try again.,120,error.upload,error,上傳在 75% 時失敗，請檢查你的網路連線後再試一次。,120
+tooltip.password,tooltip,Password must be at least 8 characters.<br>Use letters and numbers.,120,tooltip.password,tooltip,密碼至少需要 8 個字元。<br>請使用英文字母和數字。,120
+toast.invite,toast,%1$s invited you to join %2$s.,80,toast.invite,toast,%1$s 邀請你加入 %2$s。,80
+error.404,error,Error 404: Page not found,60,error.404,error,錯誤 404：找不到頁面,60
