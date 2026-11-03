@@ -3,6 +3,7 @@ import { detectSourceLanguage, detectTranslatableColumns, parseCsv, toCsv } from
 import { analyzeContext } from "@/lib/context";
 import { translateTable } from "@/lib/translate";
 import type { TargetLanguage } from "@/lib/languages";
+import type { TranslationOptions } from "@/lib/localeConfig";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -10,8 +11,8 @@ export const maxDuration = 300;
 const MAX_ROWS = 500;
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as { csv?: string; languages?: TargetLanguage[] };
-  const { csv, languages } = body;
+  const body = (await request.json()) as { csv?: string; languages?: TargetLanguage[]; options?: TranslationOptions };
+  const { csv, languages, options } = body;
 
   if (!csv || !csv.trim()) {
     return NextResponse.json({ error: "No CSV file content received." }, { status: 400 });
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
   }
 
   const context = await analyzeContext(table, columns);
-  const result = await translateTable(table, columns, languages, context);
+  const result = await translateTable(table, columns, languages, context, options ?? {});
   const outputCsv = toCsv(result);
 
   const summary =

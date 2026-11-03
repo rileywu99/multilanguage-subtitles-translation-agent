@@ -2,7 +2,8 @@ import { getAnthropicClient, stripJsonFences, TRANSLATION_MODEL, UTILITY_MODEL }
 import type { CsvTable } from "./csv";
 import type { TargetLanguage } from "./languages";
 import type { TranslationContext } from "./context";
-import { buildNameGlossary, type Glossary } from "./glossary";
+import { buildGlossary, type FileGlossary } from "./glossary";
+import { cellProblems, resolveLocaleRules, rulesForText, usesChineseScript, type LocaleRules, type TranslationOptions } from "./localeConfig";
 
 // Smaller batches keep each single model response short enough that quality
 // (rule-adherence, register, name handling) doesn't drift for entries near
@@ -26,18 +27,66 @@ const LOCALE_REGISTER_NOTES: Record<string, string> = {
   ja: "自然で読みやすい日本語表現を使用し、直訳調を避けてください。",
 };
 
+/**
+ * File-level rules that every batch must get identically: names kept as
+ * typed, do-not-translate terms, fixed term translations, one register, no
+ * padding, single currency/unit markers. Only the entries that occur in this
+ * batch are listed, so the prompt stays short.
+ */
+function termRulesLine(language: TargetLanguage, glossary: FileGlossary, rules: LocaleRules, batchText: string): string {
+  const parts: string[] = [];
+  const chinese = usesChineseScript(language.code);
+  if (chinese) {
+    parts.push(
+      "Person names written in Latin letters (English names, and pinyin names such as \"Zhang Wei\") must be copied " +
+      "exactly as typed. Never transliterate them and never guess Chinese characters for them, unless the name lookup " +
+      "table above gives a different rendering.",
+    );
+  }
+  const { keep, terms } = rulesForText(rules, batchText);
+  const fileTerms = Object.entries(glossary.terms).filter(([src]) => new RegExp(`\\b${src.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(batchText));
+  if (keep.length) parts.push(`Copy these names and terms exactly as written, never translate them: ${keep.map((k) => `"${k}"`).join(", ")}.`);
+  if (terms.length || fileTerms.length) {
+    parts.push(
+      "Use exactly these translations every time the term appears (case-insensitive, plural forms included): " +
+      [...terms, ...fileTerms].map(([a, b]) => `"${a}" → "${b}"`).join("; ") + ".",
+    );
+  }
+  if (rules.register) {
+    const other = rules.register === "您" ? "你" : "您";
+    parts.push(`Address the reader as 「${rules.register}」 in every entry; never use 「${other}」.`);
+  }
+  parts.push(
+    "Be concise: translate only what the source says. Do not add words, softeners or explanations the source does " +
+    "not have" +
+    (chinese
+      ? " — no 「請」 unless the source says please or is a polite request, no 「系統將於…進行」 framing, and no added " +
+        "「功能」, 「方案」, 「自動」 or 「產品」 unless the source implies them."
+      : ".") ,
+  );
+  if (chinese) {
+    parts.push(
+      "Write a US-dollar amount once: \"$19.99\" or \"19.99 美元\", never \"$19.99 美元\". Keep unit symbols without " +
+      "repeating the unit in words: \"0°C\", never \"攝氏0°C\". A percentage discount may be written as 折 (20% off → 8 折).",
+    );
+  }
+  return parts.join(" ") + " ";
+}
+
 function buildSystemPrompt(
   columns: string[],
   language: TargetLanguage,
   context: TranslationContext,
-  glossary: Glossary,
+  glossary: FileGlossary,
+  rules: LocaleRules,
+  batchText: string,
 ): string {
   const contextLine = context.domain !== "general" || context.tone !== "neutral" || context.notes
     ? `Content domain: ${context.domain}. Tone/register: ${context.tone}.` +
       (context.notes ? ` Special considerations: ${context.notes}` : "")
     : "";
   const localeNote = LOCALE_REGISTER_NOTES[language.code] ?? "";
-  const glossaryEntries = Object.entries(glossary);
+  const glossaryEntries = Object.entries(glossary.names);
   const glossaryLine = glossaryEntries.length > 0
     ? "This file is translated in independent chunks, so the following name lookup table is the ONLY way the same " +
       "person comes out identically everywhere — treat it as a strict override that beats any general name-handling " +
@@ -81,6 +130,7 @@ function buildSystemPrompt(
     "Apply every rule above with identical rigor to every entry in the array, regardless of position — do not " +
     "let quality, the draft/review/final self-check, or rule-adherence relax for entries later in the list; the " +
     "last entry gets exactly the same care as the first. " +
+    termRulesLine(language, glossary, rules, batchText) +
     "Keep _id unchanged, preserve array order, do not add or drop entries, keep empty strings empty. " +
     "Reply with ONLY the resulting JSON array, no prose, no markdown fences."
   );
@@ -91,7 +141,9 @@ async function translateBatchOnce(
   columns: string[],
   language: TargetLanguage,
   context: TranslationContext,
-  glossary: Glossary,
+  glossary: FileGlossary,
+  rules: LocaleRules,
+  feedback = "",
 ): Promise<BatchRecord[]> {
   const client = getAnthropicClient();
   const payload = records.map((record, i) => {
@@ -103,7 +155,9 @@ async function translateBatchOnce(
   const response = await client.messages.create({
     model: TRANSLATION_MODEL,
     max_tokens: 8192,
-    system: buildSystemPrompt(columns, language, context, glossary),
+    system:
+      buildSystemPrompt(columns, language, context, glossary, rules, records.flatMap((r) => columns.map((c) => r[c] ?? "")).join("\n")) +
+      feedback,
     messages: [{ role: "user", content: JSON.stringify(payload) }],
   });
 
@@ -121,6 +175,7 @@ async function translateHeaders(
   headers: string[],
   language: TargetLanguage,
   context: TranslationContext,
+  rules: LocaleRules,
 ): Promise<string[]> {
   const client = getAnthropicClient();
   const payload = headers.map((h, i) => ({ _id: String(i), text: h }));
@@ -133,7 +188,7 @@ async function translateHeaders(
   const localeNote = LOCALE_REGISTER_NOTES[language.code];
   const localeLine = localeNote ? ` ${localeNote}` : "";
 
-  try {
+  const ask = async (feedback: string): Promise<string[]> => {
     const response = await client.messages.create({
       model: UTILITY_MODEL,
       max_tokens: 1024,
@@ -141,7 +196,8 @@ async function translateHeaders(
         `Translate the "text" value of each entry into a short, natural CSV column-header label in ` +
         `${language.name} (${language.code}).${contextLine}${localeLine} Generic identifiers that shouldn't be translated ` +
         '(e.g. "id", "SKU", "URL") may be kept as-is. Keep _id unchanged, preserve order, do not add or drop ' +
-        'entries. Reply with ONLY the resulting JSON array of {"_id":...,"text":...} objects, no prose, no markdown fences.',
+        'entries. Reply with ONLY the resulting JSON array of {"_id":...,"text":...} objects, no prose, no markdown fences.' +
+        feedback,
       messages: [{ role: "user", content: JSON.stringify(payload) }],
     });
     const text = response.content
@@ -151,6 +207,25 @@ async function translateHeaders(
     const parsed = JSON.parse(stripJsonFences(text)) as { _id: string; text: string }[];
     const byId = new Map(parsed.map((p) => [p._id, p.text]));
     return headers.map((h, i) => byId.get(String(i)) || h);
+  };
+  // Code check with one retry: the locale note alone still let 文本 through
+  // about 1 time in 12 (eval round 1), so labels are checked against the
+  // locale's avoid-list and re-asked with the offending words named.
+  const badTerms = (labels: string[]) =>
+    labels.flatMap((l, i) => rules.avoidTerms.filter((t) => l.includes(t)).map((t) => `"${headers[i]}" used ${t}`));
+
+  try {
+    const first = await ask("");
+    const bad = badTerms(first);
+    if (bad.length === 0) return first;
+    try {
+      const second = await ask(
+        ` A previous attempt used vocabulary that is wrong for ${language.code}: ${bad.join("; ")}. Use the local term instead.`,
+      );
+      return badTerms(second).length < bad.length ? second : first;
+    } catch {
+      return first;
+    }
   } catch {
     // Header translation is best-effort — fall back to the original labels rather than failing the whole job.
     return headers;
@@ -176,50 +251,66 @@ type ValidatedBatch = {
 };
 
 /**
- * Quality guard: verifies every requested row (`_id`) came back AND that no
- * "translated" cell still looks like un-translated source text, retrying the
- * whole batch once on either failure. If it still doesn't hold up after the
- * retry, the offending rows are filled with empty strings and counted rather
- * than shipped as silently-wrong output.
+ * Quality guard: verifies every requested row (`_id`) came back, that no
+ * "translated" cell still looks like un-translated source text (hard
+ * failures), and that the file-level rules hold (soft failures, checked in
+ * code by cellProblems: kept names and terms, fixed term translations, one
+ * register, no Mainland terms in zh-TW, no doubled currency/units). Any
+ * failure retries the whole batch once, telling the model which rows broke
+ * which rule. Per row the better attempt wins. Rows that still fail a hard
+ * check are filled with empty strings and counted rather than shipped as
+ * silently-wrong output; soft failures keep the best translation.
  */
 async function translateBatchValidated(
   records: BatchRecord[],
   columns: string[],
   language: TargetLanguage,
   context: TranslationContext,
-  glossary: Glossary,
+  glossary: FileGlossary,
+  rules: LocaleRules,
 ): Promise<ValidatedBatch> {
+  type Candidate = { entry: BatchRecord | null; hard: boolean; soft: string[] };
+  const best: Candidate[] = records.map(() => ({ entry: null, hard: true, soft: [] }));
+  const better = (a: Candidate, b: Candidate) =>
+    a.hard !== b.hard ? !a.hard : a.soft.length < b.soft.length;
+  let feedback = "";
+
   for (let attempt = 0; attempt < 2; attempt++) {
+    let parsed: BatchRecord[] | null = null;
     try {
-      const parsed = await translateBatchOnce(records, columns, language, context, glossary);
-      const byId = new Map(parsed.map((entry) => [entry._id, entry]));
-      let missingCount = 0;
-      const aligned = records.map((_, i) => {
-        const entry = byId.get(String(i));
-        if (!entry) {
-          missingCount++;
-          return {};
-        }
-        const bad = columns.some((col) => entry[col] && looksUntranslated(entry[col], language));
-        if (bad) {
-          missingCount++;
-          return {};
-        }
-        return entry;
-      });
-      if (missingCount === 0) return { records: aligned, missingCount: 0 };
-      console.error(`[translate] batch attempt ${attempt}: ${missingCount}/${records.length} rows missing/untranslated`);
-      if (attempt === 0) continue; // retry the whole batch once
-      return { records: aligned, missingCount };
+      parsed = await translateBatchOnce(records, columns, language, context, glossary, rules, feedback);
     } catch (err) {
       console.error(`[translate] batch attempt ${attempt} threw:`, err);
-      if (attempt === 1) {
-        return { records: records.map(() => ({})), missingCount: records.length };
-      }
-      // else fall through and retry
     }
+    if (parsed) {
+      const byId = new Map(parsed.map((entry) => [entry._id, entry]));
+      records.forEach((record, i) => {
+        const entry = byId.get(String(i)) ?? null;
+        const hard = !entry || columns.some((col) => entry[col] && looksUntranslated(entry[col], language));
+        const soft = entry && !hard
+          ? columns.flatMap((col) => (record[col] ? cellProblems(record[col], entry[col] ?? "", language.code, rules, glossary.names) : []))
+          : [];
+        const candidate = { entry, hard, soft };
+        if (best[i].entry === null || better(candidate, best[i])) best[i] = candidate;
+      });
+    }
+    const failing = best.map((c, i) => ({ c, i })).filter(({ c }) => c.hard || c.soft.length > 0);
+    if (failing.length === 0) break;
+    console.error(`[translate] batch attempt ${attempt}: ${failing.length}/${records.length} rows failed checks`);
+    feedback =
+      " A previous attempt at this batch broke these rules; fix them in this reply: " +
+      failing.map(({ c, i }) => `_id ${i}: ${c.hard ? "missing or untranslated" : c.soft.join(", ")}`).join("; ") + ".";
   }
-  return { records: records.map(() => ({})), missingCount: records.length };
+
+  let missingCount = 0;
+  const aligned = best.map((c) => {
+    if (c.hard || !c.entry) {
+      missingCount++;
+      return {};
+    }
+    return c.entry;
+  });
+  return { records: aligned, missingCount };
 }
 
 async function runWithConcurrency<T, R>(
@@ -254,6 +345,7 @@ export async function translateTable(
   columns: string[],
   languages: TargetLanguage[],
   context: TranslationContext,
+  options: TranslationOptions = {},
 ): Promise<TranslatedTable> {
   if (columns.length === 0 || languages.length === 0) return { ...table, flaggedCount: 0 };
 
@@ -267,12 +359,13 @@ export async function translateTable(
   const headerLabelsByLanguage = new Map<string, string[]>();
 
   for (const language of languages) {
+    const rules = resolveLocaleRules(language.code, options);
     const [glossary, headerLabelsRaw] = await Promise.all([
-      buildNameGlossary(table, columns, language),
-      translateHeaders(table.headers, language, context),
+      buildGlossary(table, columns, language, rules),
+      translateHeaders(table.headers, language, context, rules),
     ]);
     const batchResults = await runWithConcurrency(batches, MAX_CONCURRENT_BATCHES, (batch) =>
-      translateBatchValidated(batch, columns, language, context, glossary),
+      translateBatchValidated(batch, columns, language, context, glossary, rules),
     );
     translatedByLanguage.set(language.code, batchResults.flatMap((b) => b.records));
 
