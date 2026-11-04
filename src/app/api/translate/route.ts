@@ -43,15 +43,33 @@ export async function POST(request: Request) {
 
   const context = await analyzeContext(table, columns);
   const result = await translateTable(table, columns, languages, context, options ?? {});
-  const outputCsv = toCsv(result);
+  // Every cell still failing a check is listed in its row, so the downloaded
+  // file carries the review list too, not only the screen.
+  const REVIEW_COLUMN = "Needs review";
+  const notesByRow = new Map<number, string[]>();
+  for (const issue of result.issues) {
+    const notes = notesByRow.get(issue.row) ?? [];
+    notes.push(`[${issue.language}] ${issue.column}: ${issue.problems.join("; ")}`);
+    notesByRow.set(issue.row, notes);
+  }
+  const outputCsv = toCsv(
+    result.issues.length === 0
+      ? result
+      : {
+          headers: [...result.headers, REVIEW_COLUMN],
+          rows: result.rows.map((row, i) => ({ ...row, [REVIEW_COLUMN]: (notesByRow.get(i + 1) ?? []).join(" | ") })),
+        },
+  );
 
   const summary =
     `Detected ${columns.length} ${sourceLanguage} column${columns.length === 1 ? "" : "s"} ` +
     `(${columns.join(", ")}) across ${table.rows.length} rows (domain: ${context.domain}, tone: ${context.tone}), ` +
     `and translated into ${languages.map((l) => l.name).join(", ")}. Output has ${result.headers.length} columns.` +
     (result.flaggedCount > 0
-      ? ` ⚠ ${result.flaggedCount} cell${result.flaggedCount === 1 ? "" : "s"} came back empty and may need a manual check.`
-      : "");
+      ? ` ⚠ ${result.flaggedCount} cell${result.flaggedCount === 1 ? "" : "s"} still failed a check after the retry and need review ` +
+        `(listed below and in the "Needs review" column).`
+      : "") +
+    (result.warnings.length > 0 ? ` ⚠ ${result.warnings.join(" ")}` : "");
 
   return NextResponse.json({
     summary,
@@ -61,5 +79,7 @@ export async function POST(request: Request) {
     rowCount: table.rows.length,
     context,
     flaggedCount: result.flaggedCount,
+    issues: result.issues,
+    warnings: result.warnings,
   });
 }

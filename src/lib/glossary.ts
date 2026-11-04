@@ -11,6 +11,8 @@ export type FileGlossary = {
   names: Glossary;
   /** Recurring ordinary terms (e.g. "account"): source term -> the one translation used in every row. */
   terms: Glossary;
+  /** Set when the glossary could not cover the whole file, so the user knows names may not be pinned. */
+  warning?: string;
 };
 
 // Batches are translated independently and have no memory of each other, so
@@ -32,11 +34,15 @@ export async function buildGlossary(
   language: TargetLanguage,
   rules: LocaleRules,
 ): Promise<FileGlossary> {
-  const allText = table.rows
+  const fullText = table.rows
     .flatMap((row) => columns.map((col) => row[col]))
     .filter((v): v is string => Boolean(v && v.trim()))
-    .join("\n")
-    .slice(0, MAX_GLOSSARY_INPUT_CHARS);
+    .join("\n");
+  const allText = fullText.slice(0, MAX_GLOSSARY_INPUT_CHARS);
+  const truncated = fullText.length > MAX_GLOSSARY_INPUT_CHARS
+    ? `${language.name}: the name list only read the first ${MAX_GLOSSARY_INPUT_CHARS.toLocaleString("en-US")} of ` +
+      `${fullText.length.toLocaleString("en-US")} characters, so names that first appear later were not pinned. Check them for consistent spelling.`
+    : undefined;
 
   const empty: FileGlossary = { names: { ...rules.nameMap }, terms: {} };
   if (!allText.trim()) return empty;
@@ -103,9 +109,13 @@ export async function buildGlossary(
       if (!t.source || !t.translation || names[t.source] || fixedTerms.includes(t.source)) continue;
       terms[t.source] = t.translation;
     }
-    return { names, terms };
-  } catch {
-    // Best-effort — translation proceeds without a glossary rather than failing the whole job.
-    return empty;
+    return { names, terms, warning: truncated };
+  } catch (err) {
+    // Translation proceeds without a glossary rather than failing the whole job, but the user is told.
+    console.error("[glossary] failed:", err);
+    return {
+      ...empty,
+      warning: `${language.name}: the name list could not be built, so names were not pinned across batches. Check every name for consistent spelling.`,
+    };
   }
 }

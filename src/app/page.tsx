@@ -5,7 +5,15 @@ import { detectSourceLanguage, detectTranslatableColumns, parseCsv, toCsv, type 
 import { COMMON_LANGUAGES } from "@/lib/languages";
 import { DEMO, DEMO_STAGES, PREPARED, SAMPLE_CSV, SAMPLE_FILE_NAME } from "@/lib/demo";
 
-type Result = { summary: string; csv: string; fileName: string; flaggedCount: number };
+type ReviewIssue = { row: number; language: string; column: string; problems: string[] };
+type Result = {
+  summary: string;
+  csv: string;
+  fileName: string;
+  flaggedCount: number;
+  issues: ReviewIssue[];
+  warnings: string[];
+};
 
 // What detectSourceLanguage(...) is allowed to return before we call it
 // "supported" — it can also return "Korean" or "Unknown", neither of which
@@ -113,6 +121,8 @@ export default function Home() {
       csv: toCsv(out),
       fileName: `${baseName}__${detectedLanguage}_to_${selectedLanguage.name}.csv`,
       flaggedCount: 0,
+      issues: [],
+      warnings: [],
     });
     setLoading(false);
   }
@@ -139,7 +149,14 @@ export default function Home() {
       }
       const baseName = fileName.replace(/\.csv$/i, "");
       const outName = `${baseName}__${detectedLanguage}_to_${selectedLanguage.name}.csv`;
-      setResult({ summary: data.summary, csv: data.csv, fileName: outName, flaggedCount: data.flaggedCount ?? 0 });
+      setResult({
+        summary: data.summary,
+        csv: data.csv,
+        fileName: outName,
+        flaggedCount: data.flaggedCount ?? 0,
+        issues: data.issues ?? [],
+        warnings: data.warnings ?? [],
+      });
     } catch {
       setError("Request failed. Please try again.");
     } finally {
@@ -278,10 +295,24 @@ export default function Home() {
           <div
             className={
               "rounded-lg px-3 py-2 text-sm " +
-              (result.flaggedCount > 0 ? "bg-amber-50 text-amber-800" : "bg-green-50 text-green-800")
+              (result.flaggedCount > 0 || result.warnings.length > 0
+                ? "bg-amber-50 text-amber-800"
+                : "bg-green-50 text-green-800")
             }
           >
             <div>{result.summary}</div>
+            {result.issues.length > 0 && (
+              <div className="mt-2">
+                <div className="font-medium">Needs review ({result.issues.length})</div>
+                <ul className="mt-1 max-h-64 list-disc overflow-y-auto pl-5 text-xs">
+                  {result.issues.map((issue) => (
+                    <li key={`${issue.row}-${issue.language}-${issue.column}`}>
+                      Row {issue.row}, {issue.column} ({issue.language}): {issue.problems.join("; ")}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <button
               onClick={() => downloadCsv(result.csv, result.fileName)}
               className="mt-2 rounded bg-gray-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-700"

@@ -41,7 +41,7 @@ CSV text
   ▼
 ⑤ 品質防呆(translateBatchValidated,內建於 ④)
   │  檢查每列 _id 是否都有回傳、譯文是否仍殘留來源語言字元(如非日文卻含假名)
-  │  失敗 → 整批重試一次;仍失敗 → 該列填空字串並計入 flaggedCount
+  │  失敗 → 整批重試一次;仍失敗 → 每一格問題都列進 issues(漏翻的格子填空),名字表或表頭出錯列進 warnings
   ▼
 toCsv() → 回傳新 CSV(UTF-8-SIG)+ summary 文字
 ```
@@ -89,7 +89,7 @@ toCsv() → 回傳新 CSV(UTF-8-SIG)+ summary 文字
 | `TranslationContext` | `context.ts` | `{ domain, tone, notes }`,單一份,套用到所有目標語言 |
 | `Glossary` | `glossary.ts` | `Record<表面形式, 標準譯名>`,**每個目標語言各自一份** |
 | `TargetLanguage` | `languages.ts` | 目前支援:English (USA)、Chinese (Traditional)、Chinese (Simplified)、Japanese |
-| `TranslatedTable` | `translate.ts` | `CsvTable & { flaggedCount }` |
+| `TranslatedTable` | `translate.ts` | `CsvTable & { flaggedCount, issues, warnings }` |
 
 輸出欄位規則:每個原始欄位在每個目標語言下都會產生對應欄位(標題一律嘗試翻譯;內容只有被判定為可翻譯欄位才翻,其餘原樣複製),標題重複時自動加上 `(語言名稱)` 後綴去重。
 
@@ -98,7 +98,7 @@ toCsv() → 回傳新 CSV(UTF-8-SIG)+ summary 文字
 1. **Glossary 強制對齊**:因為翻譯是分批獨立呼叫、彼此無記憶,靠全文掃描建立的人名對照表在每批 prompt 中作為「必須遵守」的 override,避免同一人在不同批次譯名不一致。
 2. **殘留來源語言偵測**:非日文的譯文若仍含假名字元,視為翻譯失敗,觸發整批重試。
 3. **列數對齊檢查**:每批回傳的 `_id` 需與送出的列一一對應,缺列視為失敗。
-4. **重試一次,不無限重試**:兩次都失敗則該列輸出空字串並累加 `flaggedCount`,回傳給使用者而非靜默吞掉。
+4. **重試一次,不無限重試**:兩次都失敗的每一格都回傳給使用者審(畫面上的 Needs review 清單 + 下載檔的 "Needs review" 欄),漏翻的格子填空字串;規則類錯誤保留較好的譯文但一樣列出。名字表失敗或只讀到前 60,000 字元時回傳 warning。沒有任何錯誤只寫在 log。
 5. Header 翻譯 / context 分析皆為 best-effort:LLM 呼叫失敗時 fallback 到原文/預設值,不會擋住整個翻譯流程。
 
 ## 6. 已知限制
@@ -106,7 +106,7 @@ toCsv() → 回傳新 CSV(UTF-8-SIG)+ summary 文字
 - 單檔上限 500 列,無非同步/背景處理機制(Post-v1 規劃項目)
 - 目標語言僅 4 種(`languages.ts` 寫死清單),無自訂字典/品牌詞匯入
 - Context 分析對整份檔案只做一次、抽樣 5 列 → 假設全檔語氣/領域一致,混合領域的檔案可能失準
-- 下載前沒有人工微調介面,`flaggedCount` 只在 summary 文字提醒,使用者需自行回頭核對哪幾格
+- 下載前沒有人工微調介面,需要審的格子已逐格列出(列、欄、語言、原因),但還不能在畫面上直接改
 
 ## 7. Roadmap(Post-v1)
 

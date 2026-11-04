@@ -15,10 +15,39 @@ const MAX_CONCURRENT_BATCHES = 10;
 
 type BatchRecord = Record<string, string>;
 
-export type TranslatedTable = CsvTable & {
-  /** Rows where a source cell was non-empty but its translation came back empty/missing. */
-  flaggedCount: number;
+/** One translated cell that still breaks a check after the retry, for the user to review. */
+export type ReviewIssue = {
+  /** 1-based data row (the header row is not counted). */
+  row: number;
+  language: string;
+  column: string;
+  problems: string[];
 };
+
+export type TranslatedTable = CsvTable & {
+  /** Number of cells in `issues`: every cell still failing a check after the retry. */
+  flaggedCount: number;
+  issues: ReviewIssue[];
+  /** File-level problems that are not tied to one cell (name list incomplete, header fallback). */
+  warnings: string[];
+};
+
+/** Turns cellProblems codes into plain sentences for the review list. */
+function describeProblem(code: string): string {
+  const [kind, ...rest] = code.split(":");
+  const arg = rest.join(":");
+  switch (kind) {
+    case "untranslated": return "came back empty or still in the source language (left empty)";
+    case "dnt": return `"${arg}" should be copied exactly but is missing`;
+    case "term": return `"${arg}" is not translated with the fixed term`;
+    case "name": return `name "${arg}" is not written as the name list says`;
+    case "register": return "mixes 您 and 你";
+    case "avoid": return `uses the wrong-locale term "${arg}"`;
+    case "double-currency": return "states the currency twice";
+    case "double-unit": return "states the unit twice";
+    default: return code;
+  }
+}
 
 const LOCALE_REGISTER_NOTES: Record<string, string> = {
   "zh-TW": "使用台灣在地用語與口語習慣（例如「軟體」而非「軟件」、「網路」而非「網絡」），避免大陸用語與生硬的翻譯腔。",
@@ -176,7 +205,7 @@ async function translateHeaders(
   language: TargetLanguage,
   context: TranslationContext,
   rules: LocaleRules,
-): Promise<string[]> {
+): Promise<{ labels: string[]; warning?: string }> {
   const client = getAnthropicClient();
   const payload = headers.map((h, i) => ({ _id: String(i), text: h }));
   const contextLine = context.domain !== "general"
@@ -214,21 +243,24 @@ async function translateHeaders(
   const badTerms = (labels: string[]) =>
     labels.flatMap((l, i) => rules.avoidTerms.filter((t) => l.includes(t)).map((t) => `"${headers[i]}" used ${t}`));
 
+  const leftover = (bad: string[]) =>
+    bad.length ? `${language.name} headers still use wrong-locale terms: ${bad.join("; ")}.` : undefined;
   try {
     const first = await ask("");
     const bad = badTerms(first);
-    if (bad.length === 0) return first;
+    if (bad.length === 0) return { labels: first };
     try {
       const second = await ask(
         ` A previous attempt used vocabulary that is wrong for ${language.code}: ${bad.join("; ")}. Use the local term instead.`,
       );
-      return badTerms(second).length < bad.length ? second : first;
+      const labels = badTerms(second).length < bad.length ? second : first;
+      return { labels, warning: leftover(badTerms(labels)) };
     } catch {
-      return first;
+      return { labels: first, warning: leftover(bad) };
     }
   } catch {
-    // Header translation is best-effort — fall back to the original labels rather than failing the whole job.
-    return headers;
+    // Fall back to the original labels rather than failing the whole job, but tell the user.
+    return { labels: headers, warning: `${language.name} headers could not be translated; the original labels were kept.` };
   }
 }
 
@@ -247,7 +279,8 @@ function looksUntranslated(value: string, language: TargetLanguage): boolean {
 
 type ValidatedBatch = {
   records: BatchRecord[]; // aligned 1:1 with the input records, in order
-  missingCount: number;
+  /** Cells still failing a check after the retry; index is the record's position in this batch. */
+  issues: { index: number; column: string; problems: string[] }[];
 };
 
 /**
@@ -258,8 +291,9 @@ type ValidatedBatch = {
  * register, no Mainland terms in zh-TW, no doubled currency/units). Any
  * failure retries the whole batch once, telling the model which rows broke
  * which rule. Per row the better attempt wins. Rows that still fail a hard
- * check are filled with empty strings and counted rather than shipped as
- * silently-wrong output; soft failures keep the best translation.
+ * check are filled with empty strings; soft failures keep the best
+ * translation. Every cell still failing either kind is returned as an issue
+ * for the user to review, never only logged.
  */
 async function translateBatchValidated(
   records: BatchRecord[],
@@ -269,7 +303,7 @@ async function translateBatchValidated(
   glossary: FileGlossary,
   rules: LocaleRules,
 ): Promise<ValidatedBatch> {
-  type Candidate = { entry: BatchRecord | null; hard: boolean; soft: string[] };
+  type Candidate = { entry: BatchRecord | null; hard: boolean; soft: { column: string; code: string }[] };
   const best: Candidate[] = records.map(() => ({ entry: null, hard: true, soft: [] }));
   const better = (a: Candidate, b: Candidate) =>
     a.hard !== b.hard ? !a.hard : a.soft.length < b.soft.length;
@@ -286,9 +320,13 @@ async function translateBatchValidated(
       const byId = new Map(parsed.map((entry) => [entry._id, entry]));
       records.forEach((record, i) => {
         const entry = byId.get(String(i)) ?? null;
-        const hard = !entry || columns.some((col) => entry[col] && looksUntranslated(entry[col], language));
+        const hard = !entry || columns.some((col) =>
+          entry[col] ? looksUntranslated(entry[col], language) : Boolean(record[col]?.trim()));
         const soft = entry && !hard
-          ? columns.flatMap((col) => (record[col] ? cellProblems(record[col], entry[col] ?? "", language.code, rules, glossary.names) : []))
+          ? columns.flatMap((col) =>
+              record[col]
+                ? cellProblems(record[col], entry[col] ?? "", language.code, rules, glossary.names).map((code) => ({ column: col, code }))
+                : [])
           : [];
         const candidate = { entry, hard, soft };
         if (best[i].entry === null || better(candidate, best[i])) best[i] = candidate;
@@ -299,18 +337,24 @@ async function translateBatchValidated(
     console.error(`[translate] batch attempt ${attempt}: ${failing.length}/${records.length} rows failed checks`);
     feedback =
       " A previous attempt at this batch broke these rules; fix them in this reply: " +
-      failing.map(({ c, i }) => `_id ${i}: ${c.hard ? "missing or untranslated" : c.soft.join(", ")}`).join("; ") + ".";
+      failing.map(({ c, i }) => `_id ${i}: ${c.hard ? "missing or untranslated" : c.soft.map((p) => `${p.column} ${p.code}`).join(", ")}`).join("; ") + ".";
   }
 
-  let missingCount = 0;
-  const aligned = best.map((c) => {
+  const issues: ValidatedBatch["issues"] = [];
+  const aligned = best.map((c, index) => {
     if (c.hard || !c.entry) {
-      missingCount++;
+      for (const column of columns) {
+        if (records[index][column]?.trim()) issues.push({ index, column, problems: [describeProblem("untranslated")] });
+      }
       return {};
+    }
+    for (const column of columns) {
+      const problems = c.soft.filter((p) => p.column === column).map((p) => describeProblem(p.code));
+      if (problems.length) issues.push({ index, column, problems });
     }
     return c.entry;
   });
-  return { records: aligned, missingCount };
+  return { records: aligned, issues };
 }
 
 async function runWithConcurrency<T, R>(
@@ -347,7 +391,7 @@ export async function translateTable(
   context: TranslationContext,
   options: TranslationOptions = {},
 ): Promise<TranslatedTable> {
-  if (columns.length === 0 || languages.length === 0) return { ...table, flaggedCount: 0 };
+  if (columns.length === 0 || languages.length === 0) return { ...table, flaggedCount: 0, issues: [], warnings: [] };
 
   const batches: BatchRecord[][] = [];
   for (let i = 0; i < table.rows.length; i += BATCH_SIZE) {
@@ -357,10 +401,12 @@ export async function translateTable(
   const newHeaders = [...table.headers];
   const translatedByLanguage = new Map<string, BatchRecord[]>();
   const headerLabelsByLanguage = new Map<string, string[]>();
+  const issues: ReviewIssue[] = [];
+  const warnings: string[] = [];
 
   for (const language of languages) {
     const rules = resolveLocaleRules(language.code, options);
-    const [glossary, headerLabelsRaw] = await Promise.all([
+    const [glossary, headerResult] = await Promise.all([
       buildGlossary(table, columns, language, rules),
       translateHeaders(table.headers, language, context, rules),
     ]);
@@ -368,6 +414,14 @@ export async function translateTable(
       translateBatchValidated(batch, columns, language, context, glossary, rules),
     );
     translatedByLanguage.set(language.code, batchResults.flatMap((b) => b.records));
+    batchResults.forEach((b, bi) => {
+      for (const issue of b.issues) {
+        issues.push({ row: bi * BATCH_SIZE + issue.index + 1, language: language.name, column: issue.column, problems: issue.problems });
+      }
+    });
+    if (glossary.warning) warnings.push(glossary.warning);
+    if (headerResult.warning) warnings.push(headerResult.warning);
+    const headerLabelsRaw = headerResult.labels;
 
     // De-dupe against headers already in the output (original + earlier languages).
     // Common case: an identifier translates to itself (e.g. "id" → "id") and
@@ -389,7 +443,6 @@ export async function translateTable(
     newHeaders.push(...finalLabels);
   }
 
-  let emptyTranslationCount = 0;
   const columnSet = new Set(columns);
   const rows = table.rows.map((row, i) => {
     const newRow: BatchRecord = { ...row };
@@ -399,9 +452,7 @@ export async function translateTable(
       table.headers.forEach((originalHeader, ci) => {
         const label = labels[ci];
         if (columnSet.has(originalHeader)) {
-          const value = translatedRow?.[originalHeader] ?? "";
-          if (!value && row[originalHeader]?.trim()) emptyTranslationCount++;
-          newRow[label] = value;
+          newRow[label] = translatedRow?.[originalHeader] ?? "";
         } else {
           newRow[label] = row[originalHeader] ?? "";
         }
@@ -410,5 +461,6 @@ export async function translateTable(
     return newRow;
   });
 
-  return { headers: newHeaders, rows, flaggedCount: emptyTranslationCount };
+  issues.sort((a, b) => a.row - b.row || a.language.localeCompare(b.language) || a.column.localeCompare(b.column));
+  return { headers: newHeaders, rows, flaggedCount: issues.length, issues, warnings };
 }
